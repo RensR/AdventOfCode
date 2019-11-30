@@ -19,20 +19,19 @@ func main(){
 	}
 
 	freq := strings.Split(string(dat), "\r\n")
-
-
 	currentFreq := 0
 
 	dict := make(map[int]bool)
 	dict[0] = true
-	for _, change := range freq {
-		number, _ := strconv.Atoi(change)
-		currentFreq += number
-		if dict[currentFreq] == true{
-			break
+	for true{
+		for _, change := range freq {
+			number, _ := strconv.Atoi(change)
+			currentFreq += number
+			if dict[currentFreq]{
+				fmt.Print(currentFreq)
+				return
+			}
+			dict[currentFreq] = true
 		}
-		dict[currentFreq] = true
 	}
-
-	fmt.Print(currentFreq)
 }
