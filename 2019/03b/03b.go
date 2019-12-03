@@ -1,6 +1,7 @@
 package main
 
 import (
+	"image"
 	"strconv"
 )
 
@@ -27,26 +28,12 @@ func main(){
 }
 
 func parseLine(line []string, firstRun bool){
-	lineNumber := 0
-	x := 0
-	y := 0
+	lineNumber, x, y := 0, 0, 0
 	for _, val := range line{
-		xd := 0
-		yd := 0
 		length, _ := strconv.Atoi(val[1:])
-
-		if val[0] == 'R' {
-			xd = 1
-		} else if val[0] == 'L'{
-			xd = -1
-		} else if val[0] == 'U'{
-			yd = 1
- 		} else{
- 			yd = -1
-		}
+		d := map[byte]image.Point{'U': {0, -1}, 'D': {0, 1}, 'L': {-1, 0}, 'R': {1, 0}}[val[0]]
 		for i := 1; i <= length; i++ {
-			x += xd
-			y += yd
+			x, y = x + d.X, y + d.Y
 			lineNumber ++
 			if valX, okX := board[x]; okX {
 				if valY, oky := valX[y]; oky {
