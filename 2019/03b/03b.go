@@ -31,79 +31,36 @@ func parseLine(line []string, firstRun bool){
 	x := 0
 	y := 0
 	for _, val := range line{
+		xd := 0
+		yd := 0
 		length, _ := strconv.Atoi(val[1:])
-		if val[0] == 'R'{
-			for i := 1; i <= length; i++ {
-				lineNumber ++
-				if valX, okX := board[x + i]; okX {
-					if valY, oky := valX[y]; oky {
-						if firstRun && valY > lineNumber{
-							valY = lineNumber
-						} else if !firstRun{
-							hits = append(hits, valY + lineNumber)
-						}
-					} else {
-						valX[y] = lineNumber
-					}
-				} else {
-					board[x + i] = map[int]int{ y : lineNumber}
-				}
-			}
-			x += length
-		} else if val[0] == 'U'{
-			for i := 1; i <= length; i++ {
-				lineNumber ++
-				if valX, okX := board[x]; okX {
-					if valY, oky := valX[y + i]; oky {
-						if firstRun && valY > lineNumber{
-							valY = lineNumber
-						} else if !firstRun{
-							hits = append(hits, valY + lineNumber)
-						}
-					} else {
-						valX[y + i] = lineNumber
-					}
-				} else {
-					board[x] = map[int]int{ y + i : lineNumber}
-				}
-			}
-			y += length
+
+		if val[0] == 'R' {
+			xd = 1
 		} else if val[0] == 'L'{
-			for i := 1; i <= length; i++ {
-				lineNumber ++
-				if valX, okX := board[x - i]; okX {
-					if valY, oky := valX[y]; oky {
-						if firstRun && valY > lineNumber{
-							valY = lineNumber
-						} else if !firstRun{
-							hits = append(hits, valY + lineNumber)
-						}
-					} else {
-						valX[y] = lineNumber
+			xd = -1
+		} else if val[0] == 'U'{
+			yd = 1
+ 		} else{
+ 			yd = -1
+		}
+		for i := 1; i <= length; i++ {
+			x += xd
+			y += yd
+			lineNumber ++
+			if valX, okX := board[x]; okX {
+				if valY, oky := valX[y]; oky {
+					if firstRun && valY > lineNumber{
+						valY = lineNumber
+					} else if !firstRun{
+						hits = append(hits, valY + lineNumber)
 					}
 				} else {
-					board[x - i] = map[int]int{ y : lineNumber}
+					valX[y] = lineNumber
 				}
+			} else {
+				board[x] = map[int]int{ y : lineNumber}
 			}
-			x -= length
-		} else if val[0] == 'D'{
-			for i := 1; i <= length; i++{
-				lineNumber ++
-				if valX, okX := board[x]; okX {
-					if valY, oky := valX[y - i]; oky {
-						if firstRun && valY > lineNumber{
-							valY = lineNumber
-						} else if !firstRun{
-							hits = append(hits, valY + lineNumber)
-						}
-					} else {
-						valX[y - i] = lineNumber
-					}
-				} else {
-					board[x] = map[int]int{ y - i : lineNumber}
-				}
-			}
-			y -= length
 		}
 	}
 }
