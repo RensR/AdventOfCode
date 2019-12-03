@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-var board = map[int]map[int]int{}
+var board = map[image.Point]int{}
 var hits []int
 
 func main(){
@@ -27,35 +27,31 @@ func main(){
 	findClosestHit()
 }
 
-func parseLine(line []string, firstRun bool){
+func parseLine(line []string, firstRun bool) {
 	lineNumber, x, y := 0, 0, 0
-	for _, val := range line{
+	for _, val := range line {
 		length, _ := strconv.Atoi(val[1:])
 		d := map[byte]image.Point{'U': {0, -1}, 'D': {0, 1}, 'L': {-1, 0}, 'R': {1, 0}}[val[0]]
 		for i := 1; i <= length; i++ {
-			x, y = x + d.X, y + d.Y
-			lineNumber ++
-			if valX, okX := board[x]; okX {
-				if valY, oky := valX[y]; oky {
-					if firstRun && valY > lineNumber{
-						valY = lineNumber
-					} else if !firstRun{
-						hits = append(hits, valY + lineNumber)
-					}
-				} else {
-					valX[y] = lineNumber
+			x, y = x+d.X, y+d.Y
+			lineNumber++
+			if val, okX := board[image.Point{x, y}]; okX {
+				if firstRun && val > lineNumber {
+					val = lineNumber
+				} else if !firstRun {
+					hits = append(hits, val+lineNumber)
 				}
 			} else {
-				board[x] = map[int]int{ y : lineNumber}
+				board[image.Point{x, y}] = lineNumber
 			}
 		}
 	}
 }
 
 func findClosestHit()(distance int){
-	m := 9999999999
+	m := 0
 	for _, e := range hits {
-		if e < m  && e > 0{
+		if m == 0 || e < m {
 			m = e
 		}
 	}
