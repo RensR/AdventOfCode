@@ -31,18 +31,18 @@ func parseLine(line []string, firstRun bool) {
 	lineNumber, x, y := 0, 0, 0
 	for _, val := range line {
 		length, _ := strconv.Atoi(val[1:])
-		d := map[byte]image.Point{'U': {0, -1}, 'D': {0, 1}, 'L': {-1, 0}, 'R': {1, 0}}[val[0]]
+		d := map[byte]image.Point{'U': {0, 1}, 'D': {0, -1}, 'L': {-1, 0}, 'R': {1, 0}}[val[0]]
 		for i := 1; i <= length; i++ {
 			x, y = x+d.X, y+d.Y
 			lineNumber++
-			if val, okX := board[image.Point{x, y}]; okX {
+			if val, okX := board[image.Point{X: x, Y: y}]; okX {
 				if firstRun && val > lineNumber {
 					val = lineNumber
 				} else if !firstRun {
 					hits = append(hits, val+lineNumber)
 				}
-			} else {
-				board[image.Point{x, y}] = lineNumber
+			} else if firstRun{
+				board[image.Point{X: x, Y: y}] = lineNumber
 			}
 		}
 	}
