@@ -16,25 +16,21 @@ namespace AdventOfCode.Solutions
             if(delimiter == "")
             {
                 var result = new List<int>();
-                foreach(char c in str) if(int.TryParse(c.ToString(), out int n)) result.Add(n);
+                foreach(char c in str) if(int.TryParse(c.ToString(), out var n)) result.Add(n);
                 return result.ToArray();
             }
-            else
-            {
-                return str
-                    .Split(delimiter)
-                    .Where(n => int.TryParse(n, out int v))
-                    .Select(n => Convert.ToInt32(n))
-                    .ToArray();
-            }
 
+            return str
+                .Split(delimiter)
+                .Where(n => int.TryParse(n, out int v))
+                .Select(n => Convert.ToInt32(n))
+                .ToArray();
         }
-
 
         public static int MinOfMany(params int[] items)
         {
             var result = items[0];
-            for(int i = 1; i < items.Length; i++)
+            for(var i = 1; i < items.Length; i++)
             {
                 result = Math.Min(result, items[i]);
             }
@@ -44,7 +40,7 @@ namespace AdventOfCode.Solutions
         public static int MaxOfMany(params int[] items)
         {
             var result = items[0];
-            for(int i = 1; i < items.Length; i++)
+            for(var i = 1; i < items.Length; i++)
             {
                 result = Math.Max(result, items[i]);
             }
@@ -54,9 +50,9 @@ namespace AdventOfCode.Solutions
         // https://stackoverflow.com/a/3150821/419956 by @RonWarholic
         public static IEnumerable<T> Flatten<T>(this T[,] map)
         {
-            for(int row = 0; row < map.GetLength(0); row++)
+            for(var row = 0; row < map.GetLength(0); row++)
             {
-                for(int col = 0; col < map.GetLength(1); col++)
+                for(var col = 0; col < map.GetLength(1); col++)
                 {
                     yield return map[row, col];
                 }
@@ -79,7 +75,7 @@ namespace AdventOfCode.Solutions
 
         public static string Reverse(this string str)
         {
-            char[] arr = str.ToCharArray();
+            var arr = str.ToCharArray();
             Array.Reverse(arr);
             return new string(arr);
         }
@@ -89,13 +85,22 @@ namespace AdventOfCode.Solutions
             return Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y);
         }
 
-        public static double FindGCD(double a, double b) => (a % b == 0) ? b : FindGCD(b, a % b);
+        public static double FindGCD(double a, double b)
+        {
+            while (true)
+            {
+                if (a % b == 0) return b;
+                var a1 = a;
+                a = b;
+                b = a1 % b;
+            }
+        }
 
         public static double FindLCM(double a, double b) => a * b / FindGCD(a, b);
 
         public static void Repeat(this Action action, int count)
         {
-            for(int i = 0; i < count; i++) action();
+            for(var i = 0; i < count; i++) action();
         }
 
         // https://github.com/tslater2006/AdventOfCode2019

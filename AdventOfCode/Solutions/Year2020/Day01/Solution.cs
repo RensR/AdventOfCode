@@ -1,28 +1,24 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AdventOfCode.Solutions.Year2020
 {
 
     class Day01 : ASolution
     {
-
-        int[] Expenses;
+        readonly int[] _expenses;
 
         public Day01() : base(01, 2020, "Report Repair")
         {
-            Expenses = Input.ToIntArray("\n").Where(e => e < 2020).ToArray();
+            _expenses = Input.ToIntArray("\n").Where(e => e < 2020).ToArray();
         }
 
         protected override string SolvePartOne()
         {
-            foreach (var e1 in Expenses)
+            foreach (var a in _expenses)
             {
-                foreach (var e2 in Expenses)
+                foreach (var b in _expenses)
                 {
-                    if (e1 + e2 == 2020) return (e1 * e2).ToString();
+                    if (a + b == 2020) return (a * b).ToString();
                 }
             }
             return null;
@@ -30,13 +26,13 @@ namespace AdventOfCode.Solutions.Year2020
 
         protected override string SolvePartTwo()
         {
-            foreach (var e1 in Expenses)
+            foreach (var a in _expenses)
             {
-                foreach (var e2 in Expenses)
+                foreach (var b in _expenses)
                 {
-                    foreach (var e3 in Expenses)
+                    foreach (var c in _expenses)
                     {
-                        if (e1 + e2 + e3 == 2020) return (e1 * e2 * e3).ToString();
+                        if (a + b + c == 2020) return (a * b * c).ToString();
                     }
                 }
             }
