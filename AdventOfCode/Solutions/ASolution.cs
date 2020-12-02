@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 
@@ -33,17 +34,25 @@ namespace AdventOfCode.Solutions
             if(Input == null) return;
 
             bool doOutput = false;
-            string output = $"--- Day {Day}: {Title} --- \n";
+            string output = $"--- Day {Day}: {Title} ---{"Runtime",20}\n";
             if(DebugInput != null)
             {
                 output += $"!!! DebugInput used: {DebugInput}\n";
             }
 
+            var watch = new Stopwatch();
+
             if(part != 2)
             {
-                if(Part1 != "")
+                watch.Restart();
+                if (Part1 != "")
                 {
-                    output += $"Part 1: {Part1}\n";
+                    watch.Stop();
+                    var elapsed = watch.ElapsedMilliseconds >= 1
+                        ? $"{watch.ElapsedMilliseconds,18} ms"
+                        : $"{watch.ElapsedTicks,18} ticks";
+                    output += $"Part 1: {Part1,20}{elapsed}\n";
+                    watch.Stop();
                     doOutput = true;
                 }
                 else
@@ -54,9 +63,14 @@ namespace AdventOfCode.Solutions
             }
             if(part != 1)
             {
-                if(Part2 != "")
+                watch.Restart();
+                if (Part2 != "")
                 {
-                    output += $"Part 2: {Part2}\n";
+                    watch.Stop();
+                    var elapsed = watch.ElapsedMilliseconds >= 1
+                        ? $"{watch.ElapsedMilliseconds,18} ms"
+                        : $"{watch.ElapsedTicks,18} ticks";
+                    output += $"Part 2: {Part2,20}{elapsed}\n";
                     doOutput = true;
                 }
                 else
