@@ -7,7 +7,7 @@ namespace AdventOfCode.Solutions.Year2020
     {
         private readonly string[] _lines;
         
-        public Day02() : base(02, 2020, "")
+        public Day02() : base(02, 2020, "Password Philosophy")
         {
             _lines = Input.Split('\n');
         }
