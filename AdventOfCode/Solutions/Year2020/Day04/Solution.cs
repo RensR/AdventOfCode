@@ -8,7 +8,7 @@ namespace AdventOfCode.Solutions.Year2020
     {
         readonly List<string> passportLines = new List<string>();
 
-        public Day04() : base(04, 2020, "")
+        public Day04() : base(04, 2020, "Passport Processing")
         {
             passportLines = Input.Split("\n\n").Select(x => x.Replace("\n", " ")).ToList();
         }
@@ -22,14 +22,7 @@ namespace AdventOfCode.Solutions.Year2020
         protected override string SolvePartTwo()
         {
             var passports = passportLines.Select(line => new Passport(line, true));
-
-
-    
-
-
             return passports.Where(passport => passport.IsFakeValid()).Count().ToString();
-
-            
         }
     }
 }
