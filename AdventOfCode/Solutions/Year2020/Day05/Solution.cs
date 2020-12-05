@@ -15,12 +15,13 @@ namespace AdventOfCode.Solutions.Year2020
             seats = Input.SplitByNewline().Select(line =>
                 Convert.ToInt64(line.Replace('F', '0').Replace('B', '1').Replace('L', '0').Replace('R', '1'), 2))
                 .ToList();
+            seats.Sort();
         }
 
         protected override string SolvePartOne()
         {
             //seats = boardingPassLines.Select(CalculateNumber).ToList();
-            return seats.Max().ToString();
+            return seats[^1].ToString();
         }
 
         // Old solution
@@ -40,8 +41,6 @@ namespace AdventOfCode.Solutions.Year2020
 
         protected override string SolvePartTwo()
         {
-            seats.Sort();
-
             for(int i = 1; i < seats.Count; i ++)
             {
                 if (seats[i - 1] + 1 != seats[i])
