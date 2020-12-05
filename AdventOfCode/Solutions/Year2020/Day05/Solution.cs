@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,21 +7,24 @@ namespace AdventOfCode.Solutions.Year2020
 
     class Day05 : ASolution
     {
-        readonly List<string> boardingPassLines = new List<string>();
-        private List<long> seats;
+        private readonly List<long> seats;
 
         public Day05() : base(05, 2020, "Binary Boarding")
         {
-            boardingPassLines = Input.SplitByNewline();
+            // new solution
+            seats = Input.SplitByNewline().Select(line =>
+                Convert.ToInt64(line.Replace('F', '0').Replace('B', '1').Replace('L', '0').Replace('R', '1'), 2))
+                .ToList();
         }
 
         protected override string SolvePartOne()
         {
-            seats = boardingPassLines.Select(CalculateNumber).ToList();
+            //seats = boardingPassLines.Select(CalculateNumber).ToList();
             return seats.Max().ToString();
         }
 
-        private long CalculateNumber(string input)
+        // Old solution
+        private static long CalculateNumber(string input)
         {
             long seat = 0;
             for(int i = 0; i < input.Length; i++)
@@ -30,6 +34,7 @@ namespace AdventOfCode.Solutions.Year2020
                     seat += 1 << i;
                 }
             }
+
             return seat;
         }
 
