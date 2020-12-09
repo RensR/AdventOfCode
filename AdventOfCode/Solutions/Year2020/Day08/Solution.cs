@@ -1,14 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AdventOfCode.Solutions.Year2020
 {
 
     class Day08 : ASolution
     {
-        Instruction[] baseInstructions;
+        readonly Instruction[] baseInstructions;
 
         public Day08() : base(08, 2020, "")
         {
@@ -34,17 +32,17 @@ namespace AdventOfCode.Solutions.Year2020
                     newInstructions[i].Id = "nop";
                 }
 
-                var results = RunProgram(newInstructions);
-                if (results.Item1)
+                (bool success, int accumulator) = RunProgram(newInstructions);
+                if (success)
                 {
-                    return results.Item2.ToString();
+                    return accumulator.ToString();
                 }
             }
 
             return "WRONG";
         }
 
-        private (bool, int) RunProgram(Instruction[] instructions)
+        private static (bool, int) RunProgram(Instruction[] instructions)
         {
             Dictionary<int, bool> SeenInstructons = new Dictionary<int, bool>();
             var accumulator = 0;
@@ -56,6 +54,7 @@ namespace AdventOfCode.Solutions.Year2020
                     return (true, accumulator);
                 if (currentLine > instructions.Length)
                     return (false, accumulator);
+
                 SeenInstructons[currentLine] = true;
                 var currentInstruction = instructions[currentLine];
                 switch (currentInstruction.Id)
