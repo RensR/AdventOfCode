@@ -5,7 +5,7 @@ namespace AdventOfCode.Solutions.Year2020
 {
     class Day10 : ASolution
     {
-        List<long> input;
+        readonly List<long> input;
         public Day10() : base(10, 2020, "")
         {
             input = Input.SplitByNewline().Select(long.Parse).ToList();
@@ -27,7 +27,9 @@ namespace AdventOfCode.Solutions.Year2020
                         one++;
                         break;
                     case 3:
-                        buffer[input[i + 1]] = i + 1;
+                        // Part 2
+                        buffer[input[i + 1]] = i + 2;
+                        // End Part 2
                         three++;
                         break;
                 }
@@ -41,33 +43,29 @@ namespace AdventOfCode.Solutions.Year2020
             return ConnectAll(input.ToArray()).ToString();
         }
 
-        Dictionary<long, int> buffer = new Dictionary<long, int>();
+        readonly Dictionary<long, int> buffer = new Dictionary<long, int>();
 
         private long ConnectAll(long[] next)
         {
             long steps = 1;
-            int fromIndex = 0;
+            int fromIndex = (int) next[1];
             long prevItem = 0;
-            foreach(var bufferItem in buffer.Keys)
-            {
-                var index = buffer[bufferItem];
 
-                steps *= ConnectNext(prevItem, next[(fromIndex + 1)..(index + 1)]);
-                fromIndex = index;
-                prevItem = bufferItem;
+            foreach (var threeJump in buffer.Keys)
+            {
+                var jumpIndex = buffer[threeJump];
+                steps *= ConnectNext(prevItem, next[fromIndex..jumpIndex]);
+                fromIndex = jumpIndex;
+                prevItem = threeJump;
             }
             return steps;
         }
 
         private long ConnectNext(long current, long[] next)
         {
-            if (next.Length == 1)
-            {
-                if (next[0] - current <= 3)
-                    return 1;
-                else
-                    return 0;
-            }
+            if (next.Length == 1 && next[0] - current <= 3)
+                return 1;
+            
             if (next[0] - current > 3)
                 return 0;
 
