@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AdventOfCode.Solutions.Year2020
 {
@@ -9,7 +6,7 @@ namespace AdventOfCode.Solutions.Year2020
     class Day11 : ASolution
     {
         string[] seating;
-        public Day11() : base(11, 2020, "")
+        public Day11() : base(11, 2020, "Seating System")
         {
             seating = Input.SplitByNewline().ToArray();
         }

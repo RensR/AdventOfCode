@@ -8,7 +8,7 @@ namespace AdventOfCode.Solutions.Year2020
     {
         readonly Instruction[] baseInstructions;
 
-        public Day08() : base(08, 2020, "")
+        public Day08() : base(08, 2020, "Handheld Halting")
         {
             baseInstructions = Input.SplitByNewline().ToList().Select(line => new Instruction(line)).ToArray();
         }

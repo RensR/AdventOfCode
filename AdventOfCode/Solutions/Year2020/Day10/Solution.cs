@@ -6,7 +6,7 @@ namespace AdventOfCode.Solutions.Year2020
     class Day10 : ASolution
     {
         readonly List<long> input;
-        public Day10() : base(10, 2020, "")
+        public Day10() : base(10, 2020, "Adapter Array")
         {
             input = Input.SplitByNewline().Select(long.Parse).ToList();
             input.Add(0);

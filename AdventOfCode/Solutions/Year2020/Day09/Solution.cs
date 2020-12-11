@@ -6,7 +6,7 @@ namespace AdventOfCode.Solutions.Year2020
     {
         private readonly long[] numbers;
 
-        public Day09() : base(09, 2020, "")
+        public Day09() : base(09, 2020, "Encoding Error")
         {
             numbers = Input.SplitByNewline().Select(long.Parse).ToArray();
         }
