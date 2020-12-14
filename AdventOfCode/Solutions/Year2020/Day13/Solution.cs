@@ -38,7 +38,7 @@ namespace AdventOfCode.Solutions.Year2020
 
             // The aggregate funtion would be nice to use but as it folds over the list
             // the last operations will merge bussed with a very large and a very small
-            // loop time. This is incrediably inefficient, therefore we try to always 
+            // loop time. This is incredibly inefficient, therefore we try to always 
             // merge busses with similar round trip times. This is also why we sort the 
             // list in the loop.
             // var bus = relevantBusses.Aggregate(MergeBusses); == slow
