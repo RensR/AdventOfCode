@@ -11,11 +11,11 @@ namespace AdventOfCode.Solutions.Year2020
 
         public Day16() : base(16, 2020, "Ticket Translation")
         {
-            var segents = Input.Split("\n\n");
+            var segments = Input.Split("\n\n");
 
-            Rules = segents[0].SplitByNewline().Select(line => new Rule(line)).ToList();
-            MyTicket = segents[1].SplitByNewline()[1].Split(',').Select(int.Parse).ToList();
-            OtherTickets = segents[2].SplitByNewline().ToArray()[1..].Select(line => line.Split(',').Select(int.Parse).ToList()).ToList();
+            Rules = segments[0].SplitByNewline().Select(line => new Rule(line)).ToList();
+            MyTicket = segments[1].SplitByNewline()[1].Split(',').Select(int.Parse).ToList();
+            OtherTickets = segments[2].SplitByNewline().ToArray()[1..].Select(line => line.Split(',').Select(int.Parse).ToList()).ToList();
         }
 
         protected override string SolvePartOne()
@@ -79,7 +79,7 @@ namespace AdventOfCode.Solutions.Year2020
         {
             var done = new List<Rule>();
 
-            while(done.Count < MyTicket.Count - 1)
+            while (done.Count < MyTicket.Count - 1)
             {
                 foreach (Rule rule in rules)
                 {
