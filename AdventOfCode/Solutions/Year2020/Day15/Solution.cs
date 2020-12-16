@@ -9,20 +9,16 @@ namespace AdventOfCode.Solutions.Year2020
         int previous;
         int i = 0;
 
-        public Day15() : base(15, 2020, "")
+        public Day15() : base(15, 2020, "Rambunctious Recitation")
         {
             var numbers = Input.Split(',').ToList().Select(int.Parse).ToArray();
 
             for(i = 1; i <= numbers.Length; i++)
             {
                 if(i == numbers.Length)
-                {
                     previous = numbers[i - 1];
-                }
                 else
-                {
                     LastSpoken.Add(numbers[i - 1], i);
-                }
             }
         }
 

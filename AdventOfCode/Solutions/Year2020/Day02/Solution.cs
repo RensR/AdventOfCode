@@ -2,7 +2,6 @@ using System.Linq;
 
 namespace AdventOfCode.Solutions.Year2020
 {
-
     class Day02 : ASolution
     {
         private readonly string[] _lines;
@@ -38,14 +37,10 @@ namespace AdventOfCode.Solutions.Year2020
             var minMax = parts[0].Split('-').Select(int.Parse).ToArray();
             var chara = parts[1].First();
 
-
             if (minMax[0] <= parts[2].Length && parts[2][minMax[0] - 1] == chara)
             {
                 if (minMax[1] > parts[2].Length || parts[2][minMax[1] - 1] != chara)
-                {
                     return 1;
-                }
-
                 return 0;
             }
 
