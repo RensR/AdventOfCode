@@ -5,21 +5,18 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Solutions.Year2020
 {
-
     class Day18 : ASolution
     {
-        List<string> lines;
-        public Day18() : base(18, 2020, "")
+        readonly List<string> lines;
+        public Day18() : base(18, 2020, "Operation Order")
         {
             lines = Input.SplitByNewline();
         }
 
         protected override string SolvePartOne()
         {
-            return null;
             return lines.Select(line => Item.Eval(Item.Parse(line)).Value).Sum().ToString();
         }
-
 
         protected override string SolvePartTwo()
         {
@@ -29,62 +26,53 @@ namespace AdventOfCode.Solutions.Year2020
 
     public class Item
     {
-        public long Value;
-
-        public static Item Parse(string line, bool instantTimes = false)
+        public static Item Parse(string line, bool instantPlus = false)
         {
-            line = RemoveBrackets(line, Parse, instantTimes);
+            var values = RemoveBrackets(line, instantPlus).Split(' ');
             Operation product = null;
-            var values = line.Split(' ');
 
             for (int i = 1; i < values.Length; i += 2)
             {
                 if (product == null)
                 {
-                    product = new Operation(
-                        new Val(values[i - 1]),
-                        new Val(values[i + 1]),
-                        values[i]);
+                    product = new Operation(new Val(values[i - 1]), new Val(values[i + 1]), values[i]);
                 }
                 else
                 {
-                    if(instantTimes && values[i] == "+")
+                    if(instantPlus && values[i] == "+")
                     {
                         Operation deepRight = product;
 
                         while(deepRight.Right is Operation op)
-                        {
                             deepRight = op;
-                        }
+
                         deepRight.Right = new Operation(
                             new Val(values[i - 1]),
                             new Val(values[i + 1]),
                             values[i]);
-
                     }
                     else
-                        product = new Operation(
-                            product,
-                            new Val(values[i + 1]),
-                            values[i]);
+                    {
+                        product = new Operation(product, new Val(values[i + 1]), values[i]);
+                    }
                 }  
             }
 
             return product;
         }
 
-        private static string RemoveBrackets(string line, Func<string, bool, Item> parse, bool instantTimes)
+        private static string RemoveBrackets(string line, bool instantPlus)
         {
             var withinBrackets = Regex.Match(line, @"\([^\(\)]*\)");
             while (withinBrackets.Success)
             {
-                line = line.Replace(withinBrackets.Value, Eval(parse(withinBrackets.Value[1..^1], instantTimes)).Value.ToString());
+                line = line.Replace(withinBrackets.Value, Eval(Parse(withinBrackets.Value[1..^1], instantPlus)).Value.ToString());
                 withinBrackets = Regex.Match(line, @"\([^\(\)]*\)");
             }
             return line;
         }
 
-        public static Item Eval(Operation op)
+        public static Val Eval(Operation op)
         {
             while (op.Left is Operation opL)
             {
@@ -99,11 +87,11 @@ namespace AdventOfCode.Solutions.Year2020
             return op.Func(op.Left, op.Right);
         }
 
-        public static Item Eval(Item val)
+        public static Val Eval(Item val)
         {
             if (val is Operation op)
                 return Eval(op);
-            else return val;
+            else return val as Val;
         }
     }
 
@@ -111,8 +99,11 @@ namespace AdventOfCode.Solutions.Year2020
     {
         public Item Left;
         public Item Right;
-        public Func<Item, Item, Item> Func;
+        public Func<Item, Item, Val> Func;
         public string Funcc;
+
+        public static Func<Item, Item, Val> Times = (left, right) => new Val(Eval(left).Value * Eval(right).Value);
+        public static Func<Item, Item, Val> Plus = (left, right) => new Val(Eval(left).Value + Eval(right).Value);
 
         public Operation(Item left, Item right, string func)
         {
@@ -121,14 +112,12 @@ namespace AdventOfCode.Solutions.Year2020
             Func = func == "+" ? Plus : Times;
             Funcc = func;
         }
-
-        public static Func<Item, Item, Item> Times = (left, right) => new Val(Eval(left).Value * Eval(right).Value);
-        public static Func<Item, Item, Item> Plus = (left, right) => new Val(Eval(left).Value + Eval(right).Value);
-
     }
 
     public class Val : Item
     {
+        public long Value;
+
         public Val(long val)
         {
             Value = val;
