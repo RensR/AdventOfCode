@@ -5,8 +5,8 @@ namespace AdventOfCode.Solutions.Year2020
 {
     class Day19 : ASolution
     {
-        List<string> toTest;
-        Dictionary<int, Match> rules = new Dictionary<int, Match>();
+        readonly List<string> toTest;
+        readonly Dictionary<int, Match> rules = new Dictionary<int, Match>();
 
         public Day19() : base(19, 2020, "Monster Messages")
         {
@@ -35,9 +35,7 @@ namespace AdventOfCode.Solutions.Year2020
 
         private bool MatchString(string input)
         {
-            if (rules[0].MatchString(input, out var resultString))
-                return resultString.Contains(string.Empty);
-            return false;
+            return rules[0].MatchString(input).Contains(string.Empty);
         }
 
         protected override string SolvePartTwo()
@@ -56,7 +54,7 @@ namespace AdventOfCode.Solutions.Year2020
 
     abstract class Match
     {
-        public abstract bool MatchString(string input, out List<string> resultString);
+        public abstract List<string> MatchString(string input);
         public abstract void UpdateMatches(Dictionary<int, Match> matches);
     }
 
@@ -68,16 +66,14 @@ namespace AdventOfCode.Solutions.Year2020
         {
             matchingString = s[2..^1];
         }
-        public override bool MatchString(string input, out List<string> resultString)
+        public override List<string> MatchString(string input)
         {
             if (input.StartsWith(matchingString))
             {
-                resultString = new List<string> { input[matchingString.Length..] };
-                return true;
+                return new List<string> { input[matchingString.Length..] };
             }
 
-            resultString = new List<string>();
-            return false;
+            return new List<string>();
         }
 
         public override void UpdateMatches(Dictionary<int, Match> matches)
@@ -90,9 +86,8 @@ namespace AdventOfCode.Solutions.Year2020
     {
         public List<Match> Either = new List<Match>();
         public List<Match> Or = new List<Match>();
-
-        List<int> EitherInt;
-        List<int> OrInt = new List<int>();
+        readonly List<int> EitherInt;
+        readonly List<int> OrInt = new List<int>();
 
         public DeepMatch(string line)
         {
@@ -104,37 +99,30 @@ namespace AdventOfCode.Solutions.Year2020
             }
         }
 
-        public override bool MatchString(string input, out List<string> resultString)
+        public override List<string> MatchString(string input)
         {
-            MatchSingleString(input, Either, out resultString);
-            if(Or.Count > 0)
-            {
-                MatchSingleString(input, Or, out var moreResultStrings);
-                resultString.AddRange(moreResultStrings);
-            }
-            if (resultString.Count > 0)
-                return true;
-            return false;
+            var resultString = MatchSingleString(input, Either);
+            resultString.AddRange(MatchSingleString(input, Or));
+            return resultString;
         }
 
-        public bool MatchSingleString(string input, List<Match> matching, out List<string> resultString)
+        public static List<string> MatchSingleString(string input, List<Match> matching)
         {
-            resultString = new List<string>();
-            if (input == string.Empty)
-                return false;
+            var resultString = new List<string>();
+            if (input == string.Empty || matching.Count == 0)
+                return resultString;
 
             var intermediateResults = new List<string> { input };
             foreach(var match in matching)
             {
                 foreach(var inputString in intermediateResults.Where(iresult => iresult != string.Empty))
                 {
-                    match.MatchString(inputString, out var matchRemainder);
-                    resultString.AddRange(matchRemainder);
+                    resultString.AddRange(match.MatchString(inputString));
                 }
                 intermediateResults = new List<string> (resultString );
             }
 
-            return resultString.Count > 0;
+            return resultString;
         }
 
         public override void UpdateMatches(Dictionary<int, Match> matches)
