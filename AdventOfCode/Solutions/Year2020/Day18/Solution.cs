@@ -33,6 +33,7 @@ namespace AdventOfCode.Solutions.Year2020
 
             for (int i = 3; i < values.Length; i += 2)
             {
+                // part 2
                 if (instantPlus && values[i] == "+")
                 {
                     Operation deepRight = product;
@@ -40,11 +41,9 @@ namespace AdventOfCode.Solutions.Year2020
                     while (deepRight.Right is Operation op)
                         deepRight = op;
 
-                    deepRight.Right = new Operation(
-                        new Val(values[i - 1]),
-                        new Val(values[i + 1]),
-                        values[i]);
+                    deepRight.Right = new Operation(new Val(values[i - 1]), new Val(values[i + 1]), values[i]);
                 }
+                // End part 2
                 else
                 {
                     product = new Operation(product, new Val(values[i + 1]), values[i]);
