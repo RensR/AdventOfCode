@@ -49,7 +49,9 @@ namespace AdventOfCode.Solutions
                 {
                     watch.Stop();
                     var elapsed = watch.ElapsedMilliseconds >= 1
-                        ? $"{watch.ElapsedMilliseconds,18} ms"
+                        ? watch.ElapsedMilliseconds > 2000
+                            ? $"{watch.ElapsedMilliseconds / 1000,18} s"
+                            : $"{watch.ElapsedMilliseconds,18} ms"
                         : $"{watch.ElapsedTicks,18} ticks";
                     output += $"Part 1: {Part1,20}{elapsed}\n";
                     watch.Stop();
@@ -58,7 +60,7 @@ namespace AdventOfCode.Solutions
                 else
                 {
                     output += "Part 1: Unsolved\n";
-                    if(part == 1) doOutput = true;
+                    if (part == 1) doOutput = true;
                 }
             }
             if(part != 1)

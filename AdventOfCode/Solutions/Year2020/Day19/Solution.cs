@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AdventOfCode.Solutions.Year2020
 {
     class Day19 : ASolution
     {
-        readonly List<string> toTest;
+        private readonly List<string> toTest;
         readonly Dictionary<int, Match> rules = new Dictionary<int, Match>();
 
         public Day19() : base(19, 2020, "Monster Messages")
@@ -17,7 +18,7 @@ namespace AdventOfCode.Solutions.Year2020
                 var idAndRule = stringRule.Split(':');
                 rules[int.Parse(idAndRule[0])] = idAndRule[1].Contains('"') ?
                     new CharMatch(idAndRule[1]) : 
-                    new DeepMatch(idAndRule[1]);
+                    new DeepMatch(stringRule);
             }
 
             foreach(int key in rules.Keys)
@@ -30,34 +31,53 @@ namespace AdventOfCode.Solutions.Year2020
 
         protected override string SolvePartOne()
         {
-            return null;
-            return toTest.Where(MatchString).Count().ToString();
+            //return null;
+            return toTest.Where(s => MatchString(s, rules)).Count().ToString();
         }
 
-        private bool MatchString(string input)
+        private static bool MatchString(string input, Dictionary<int, Match> rules)
         {
             return rules[0].MatchString(input).Contains(string.Empty);
+        }
+
+        private static IEnumerable<string> MatchString2(string input, Dictionary<int, Match> rules)
+        {
+            return rules[0].MatchString(input);
         }
 
         protected override string SolvePartTwo()
         {
             //return null;
 
-            rules[8] = new CyclicMatch(" 42 | 42 8");
-            rules[11] = new CyclicMatch(" 42 31 | 42 11 31");
+            rules[8] = new CyclicMatch("8: 42 | 42 8");
+            rules[11] = new CyclicMatch("11: 42 31 | 42 11 31");
 
             foreach (int key in rules.Keys)
             {
                 rules[key].UpdateMatches(rules);
             }
 
-            return toTest.Where(MatchString).Count().ToString();
+            var result = new List<IEnumerable<string>>();
+
+            toTest.ForEach(current =>
+            {
+                result.Add(MatchString2(current, rules));
+            });
+
+            //Parallel.ForEach(toTest, (current) =>
+            //{
+            //    result.Add(MatchString2(current, rules));
+            //});
+
+            var empty = result.Where(r => r.Contains(string.Empty)).ToList();
+
+            return empty.Count().ToString();
         }
     }
 
     abstract class Match
     {
-        public abstract List<string> MatchString(string input);
+        public abstract IEnumerable<string> MatchString(string input);
         public abstract void UpdateMatches(Dictionary<int, Match> matches);
     }
 
@@ -69,7 +89,8 @@ namespace AdventOfCode.Solutions.Year2020
         {
             matchingString = s[2..^1];
         }
-        public override List<string> MatchString(string input)
+
+        public override IEnumerable<string> MatchString(string input)
         {
             if (input.StartsWith(matchingString))
             {
@@ -87,29 +108,26 @@ namespace AdventOfCode.Solutions.Year2020
 
     class DeepMatch : Match
     {
-        public List<Match> Either = new List<Match>();
-        public List<Match> Or = new List<Match>();
-        readonly List<int> EitherInt;
-        readonly List<int> OrInt = new List<int>();
+        public int Id;
+        public List<List<Match>> Options = new List<List<Match>>();
+        public List<List<int>> OptionsInt = new List<List<int>>();
 
         public DeepMatch(string line)
         {
-            var eitherOr = line.Split('|');
-            EitherInt = eitherOr[0].Trim().Split(' ').Select(int.Parse).ToList();
-            if(eitherOr.Length > 1)
+            var idAndRule = line.Split(':');
+            Id = int.Parse(idAndRule[0]);
+            foreach (var option in idAndRule[1].Split('|'))
             {
-                OrInt = eitherOr[1].Trim().Split(' ').Select(int.Parse).ToList();
+                OptionsInt.Add(option.Trim().Split(' ').Select(int.Parse).ToList());
             }
         }
 
-        public override List<string> MatchString(string input)
+        public override IEnumerable<string> MatchString(string input)
         {
-            var resultString = MatchSingleString(input, Either);
-            resultString.AddRange(MatchSingleString(input, Or));
-            return resultString;
+            return Options.SelectMany(option => MatchSingleString(input, option)).Distinct();
         }
 
-        public static List<string> MatchSingleString(string input, List<Match> matching)
+        public static IEnumerable<string> MatchSingleString(string input, List<Match> matching)
         {
             var resultString = new List<string>();
             if (input.Length < matching.Count || matching.Count == 0)
@@ -130,17 +148,8 @@ namespace AdventOfCode.Solutions.Year2020
 
         public override void UpdateMatches(Dictionary<int, Match> matches)
         {
-            Either = new List<Match>();
-            Or = new List<Match>();
-            foreach (var match in EitherInt)
-            {
-                Either.Add(matches[match]);
-            }
-
-            foreach (var match in OrInt)
-            {
-                Or.Add(matches[match]);
-            }
+            Options = (from intOption in OptionsInt
+                       select new List<Match>(intOption.Select(iop => matches[iop]))).ToList();
         }
     }
 
@@ -148,12 +157,22 @@ namespace AdventOfCode.Solutions.Year2020
     {
         public CyclicMatch(string line) : base(line)
         {
-            
-        }
+            var idAndLine = line.Split(':');
+            OptionsInt = new List<List<int>>();
 
-        public override void UpdateMatches(Dictionary<int, Match> matches)
-        {
-            base.UpdateMatches(matches);
+            var split = idAndLine[1].Split('|');
+            var first = split[0].Trim();
+            OptionsInt.Add(new List<int>(first.Split(' ').Select(int.Parse)));
+
+            var second = split[1].Trim();
+            var next = second;
+            for(int i = 0; i < 25; i++)
+            {
+                var toAdd = next.Replace(idAndLine[0], first).Trim();
+                OptionsInt.Add(new List<int>(toAdd.Split(' ').Select(int.Parse)));
+
+                next = next.Replace(idAndLine[0], second).Trim();
+            }
         }
     }
 }
