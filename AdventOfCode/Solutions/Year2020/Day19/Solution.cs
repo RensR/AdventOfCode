@@ -30,6 +30,7 @@ namespace AdventOfCode.Solutions.Year2020
 
         protected override string SolvePartOne()
         {
+            return null;
             return toTest.Where(MatchString).Count().ToString();
         }
 
@@ -40,14 +41,16 @@ namespace AdventOfCode.Solutions.Year2020
 
         protected override string SolvePartTwo()
         {
-            //if (rules[8] is DeepMatch rule8)
-            //    rule8.Or = new List<Match> { rules[42], rule8 };
+            //return null;
 
+            rules[8] = new CyclicMatch(" 42 | 42 8");
+            rules[11] = new CyclicMatch(" 42 31 | 42 11 31");
 
-            //if (rules[1] is DeepMatch rule11)
-            //    rule11.Or = new List<Match> { rules[42], rule11, rules[31] };
+            foreach (int key in rules.Keys)
+            {
+                rules[key].UpdateMatches(rules);
+            }
 
-            return null;
             return toTest.Where(MatchString).Count().ToString();
         }
     }
@@ -109,13 +112,13 @@ namespace AdventOfCode.Solutions.Year2020
         public static List<string> MatchSingleString(string input, List<Match> matching)
         {
             var resultString = new List<string>();
-            if (input == string.Empty || matching.Count == 0)
+            if (input.Length < matching.Count || matching.Count == 0)
                 return resultString;
 
             var intermediateResults = new List<string> { input };
             foreach(var match in matching)
             {
-                foreach(var inputString in intermediateResults.Where(iresult => iresult != string.Empty))
+                foreach(var inputString in intermediateResults.Where(iresult => iresult != string.Empty).Distinct())
                 {
                     resultString.AddRange(match.MatchString(inputString));
                 }
@@ -127,7 +130,9 @@ namespace AdventOfCode.Solutions.Year2020
 
         public override void UpdateMatches(Dictionary<int, Match> matches)
         {
-            foreach(var match in EitherInt)
+            Either = new List<Match>();
+            Or = new List<Match>();
+            foreach (var match in EitherInt)
             {
                 Either.Add(matches[match]);
             }
@@ -139,4 +144,16 @@ namespace AdventOfCode.Solutions.Year2020
         }
     }
 
+    class CyclicMatch : DeepMatch
+    {
+        public CyclicMatch(string line) : base(line)
+        {
+            
+        }
+
+        public override void UpdateMatches(Dictionary<int, Match> matches)
+        {
+            base.UpdateMatches(matches);
+        }
+    }
 }
