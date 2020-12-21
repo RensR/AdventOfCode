@@ -6,7 +6,7 @@ namespace AdventOfCode.Solutions.Year2020
 
     class Day04 : ASolution
     {
-        readonly List<string> passportLines = new List<string>();
+        readonly List<string> passportLines;
 
         public Day04() : base(04, 2020, "Passport Processing")
         {
@@ -16,13 +16,13 @@ namespace AdventOfCode.Solutions.Year2020
         protected override string SolvePartOne()
         {
             var passports = passportLines.Select(line => new Passport(line));
-            return passports.Where(passport => passport.IsFakeValid()).Count().ToString();
+            return passports.Count(passport => passport.IsFakeValid()).ToString();
         }
 
         protected override string SolvePartTwo()
         {
             var passports = passportLines.Select(line => new Passport(line, true));
-            return passports.Where(passport => passport.IsFakeValid()).Count().ToString();
+            return passports.Count(passport => passport.IsFakeValid()).ToString();
         }
     }
 }

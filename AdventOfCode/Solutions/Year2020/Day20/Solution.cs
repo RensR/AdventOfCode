@@ -5,11 +5,10 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Solutions.Year2020
 {
-
     class Day20 : ASolution
     {
         readonly List<Tile> Tiles;
-        readonly List<Tile> Corners = new List<Tile>();
+        readonly List<Tile> Corners = new();
 
         public Day20() : base(20, 2020, "Jurassic Jigsaw")
         {
@@ -32,13 +31,13 @@ namespace AdventOfCode.Solutions.Year2020
             var topLeft = Corners[0];
 
             topLeft.FlipUpDown();
-            while(topLeft.matchingSides.up != 0 || topLeft.matchingSides.left != 0)
+            while(topLeft.MatchingSides.up != 0 || topLeft.MatchingSides.left != 0)
             {
                 topLeft.Rotate();
             }
 
             var matchedTiles = MatchAllTiles(topLeft);
-            char[][] map = new char[96][];
+            var map = new char[96][];
 
             for(var i = 0; i < matchedTiles.Count; i++)
             {
@@ -54,8 +53,8 @@ namespace AdventOfCode.Solutions.Year2020
             }
 
             map = map.Reverse().ToArray();
-            char[][] notNessy = map.ToArray();
-            for(int turns = 0; turns < 4; turns++)
+            var notNessy = map.ToArray();
+            for(var turns = 0; turns < 4; turns++)
             {
                 notNessy = FindNessy(map, notNessy);
                 notNessy = Tile.RotateMatrixCounterClockwise(notNessy);
@@ -66,7 +65,7 @@ namespace AdventOfCode.Solutions.Year2020
 
         public static char[][] FindNessy(char[][] map, char[][] notNessy)
         {
-            var Nessy = new List<(int, int)>
+            var nessy = new List<(int, int)>
             {
                 (18, -1),
                 (0,0),(5,0), (6,0), (11,0), (12, 0), (17, 0), (18,0), (19,0),
@@ -78,10 +77,10 @@ namespace AdventOfCode.Solutions.Year2020
                 {
                     // is a starting Nessy, is within bounds to contain nessy and actually contains Nessy
                     if (map[x][y] is '#' && x + 19 < map[x].Length &&
-                        Nessy.All(delta => map[x + delta.Item1][y + delta.Item2] is '#'))
+                        nessy.All(delta => map[x + delta.Item1][y + delta.Item2] is '#'))
                     {
                         // Mark Nessy on the Nessy map
-                        Nessy.ForEach(delta => notNessy[x + delta.Item1][y + delta.Item2] = 'N');
+                        nessy.ForEach(delta => notNessy[x + delta.Item1][y + delta.Item2] = 'N');
                     }
                 }
             }
@@ -89,7 +88,7 @@ namespace AdventOfCode.Solutions.Year2020
             return notNessy;
         }
 
-        List<List<Tile>> MatchAllTiles(Tile start)
+        private List<List<Tile>> MatchAllTiles(Tile start)
         {
             var sortedTiles = new List<List<Tile>>();
             var availableTiles = new List<Tile>(Tiles);
@@ -97,14 +96,14 @@ namespace AdventOfCode.Solutions.Year2020
 
             while (current != null)
             {
-                if (current.matchingSides.left != 0)
+                if (current.MatchingSides.left != 0)
                     current.FlipLeftRight();
                 var row = new List<Tile>();
                 while (current != null)
                 {
                     if (sortedTiles.Count == 0)
                     {
-                        if (current.matchingSides.up != 0)
+                        if (current.MatchingSides.up != 0)
                         {
                             current.FlipUpDown();
                         }
@@ -127,7 +126,7 @@ namespace AdventOfCode.Solutions.Year2020
             return sortedTiles;
         }
 
-        static Tile FindNextRight(Tile tile, List<Tile> availableTiles)
+        private static Tile FindNextRight(Tile tile, List<Tile> availableTiles)
         {
             var toFind = tile.Right;
             var next = availableTiles.FirstOrDefault(t => t.Right == toFind || t.Up == toFind || t.Down == toFind || t.Left == toFind);
@@ -141,7 +140,7 @@ namespace AdventOfCode.Solutions.Year2020
             return next;
         }
 
-        static Tile FindNextBottom(Tile tile, List<Tile> availableTiles)
+        private static Tile FindNextBottom(Tile tile, List<Tile> availableTiles)
         {
             var toFind = tile.Down;
             var next = availableTiles.FirstOrDefault(t => t.Right == toFind || t.Up == toFind || t.Down == toFind || t.Left == toFind);
@@ -155,7 +154,7 @@ namespace AdventOfCode.Solutions.Year2020
             return next;
         }
 
-        class Tile
+        private class Tile
         {
             public readonly long Id;
             public string[] Pixels;
@@ -163,20 +162,22 @@ namespace AdventOfCode.Solutions.Year2020
             public int Right;
             public int Up;
             public int Down;
-            public (int up, int right, int down, int left) matchingSides;
+            public (int up, int right, int down, int left) MatchingSides;
 
             public Tile(string tileLayout)
             {
                 var lines = tileLayout.SplitByNewline();
                 Id = long.Parse(Regex.Match(lines[0], @"\d+").Value);
+                // Skip the line with the ID
                 lines = lines.Skip(1).ToList();
 
                 Pixels = new string[lines.Count - 2];
-                for (int i = 1; i < lines.Count - 1; i++)
+                for (var i = 1; i < lines.Count - 1; i++)
                 {
                     Pixels[i - 1] = lines[i][1..^1];
                 }
 
+                // Hash the sides
                 Up = Math.Min(Convert.ToInt32(lines[0].Replace('#', '1').Replace('.', '0'), 2),
                     Convert.ToInt32(lines[0].Reverse().Replace('#', '1').Replace('.', '0'), 2));
 
@@ -192,13 +193,13 @@ namespace AdventOfCode.Solutions.Year2020
 
             public Tile Rotate()
             {
-                int tmp = Left;
+                var tmp = Left;
                 Left = Up;
                 Up = Right;
                 Right = Down;
                 Down = tmp;
 
-                matchingSides = (matchingSides.right, matchingSides.down, matchingSides.left, matchingSides.up);
+                MatchingSides = (MatchingSides.right, MatchingSides.down, MatchingSides.left, MatchingSides.up);
 
                 Pixels = RotateMatrixCounterClockwise(Pixels);
                 return this;
@@ -210,7 +211,7 @@ namespace AdventOfCode.Solutions.Year2020
                 Up = Down;
                 Down = tmp;
 
-                matchingSides = (matchingSides.down, matchingSides.right, matchingSides.up, matchingSides.left);
+                MatchingSides = (MatchingSides.down, MatchingSides.right, MatchingSides.up, MatchingSides.left);
 
                 Pixels = Pixels.Reverse().ToArray();
                 return this;
@@ -221,25 +222,25 @@ namespace AdventOfCode.Solutions.Year2020
                 return Rotate().FlipUpDown().Rotate().Rotate().Rotate();
             }
 
-            static string[] RotateMatrixCounterClockwise(string[] currentMatrix)
+            private static string[] RotateMatrixCounterClockwise(string[] currentMatrix)
             {
-                char[][] oldMatrix = currentMatrix.Select(s => s.ToCharArray()).ToArray();
+                var oldMatrix = currentMatrix.Select(s => s.ToCharArray()).ToArray();
                 return RotateMatrixCounterClockwise(oldMatrix).Select(m => new string(m)).ToArray();
             }
 
-            public static char[][] RotateMatrixCounterClockwise(char[][] oldMatrix)
+            public static char[][] RotateMatrixCounterClockwise(IReadOnlyList<char[]> oldMatrix)
             {
-                char[][] newMatrix = new char[oldMatrix.Length][];
-                for (var i = 0; i < oldMatrix.Length; i++)
+                var newMatrix = new char[oldMatrix.Count][];
+                for (var i = 0; i < oldMatrix.Count; i++)
                 {
                     newMatrix[i] = new char[oldMatrix[0].Length];
                 }
 
-                int newColumn, newRow = 0;
-                for (int oldColumn = oldMatrix.Length - 1; oldColumn >= 0; oldColumn--)
+                var newRow = 0;
+                for (var oldColumn = oldMatrix.Count - 1; oldColumn >= 0; oldColumn--)
                 {
-                    newColumn = 0;
-                    for (int oldRow = 0; oldRow < oldMatrix[0].Length; oldRow++)
+                    var newColumn = 0;
+                    for (var oldRow = 0; oldRow < oldMatrix[0].Length; oldRow++)
                     {
                         newMatrix[newRow][newColumn] = oldMatrix[oldRow][oldColumn];
                         newColumn++;
@@ -253,10 +254,8 @@ namespace AdventOfCode.Solutions.Year2020
             {
                 int left = 0, right = 0, up = 0, down = 0;
 
-                foreach(var otherTile in otherTiles)
+                foreach (var otherTile in otherTiles.Where(otherTile => otherTile.Id != Id))
                 {
-                    if (otherTile.Id == Id)
-                        continue;
                     if (Left == otherTile.Left || Left == otherTile.Right || Left == otherTile.Up || Left == otherTile.Down )
                     {
                         left += 1;
@@ -275,7 +274,7 @@ namespace AdventOfCode.Solutions.Year2020
                     }
                 }
 
-                matchingSides = (up, right, down, left);
+                MatchingSides = (up, right, down, left);
                 return (up, right, down, left);
             }
         }

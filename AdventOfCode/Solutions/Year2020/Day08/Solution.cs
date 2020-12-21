@@ -3,7 +3,6 @@ using System.Linq;
 
 namespace AdventOfCode.Solutions.Year2020
 {
-
     class Day08 : ASolution
     {
         readonly Instruction[] baseInstructions;
@@ -44,18 +43,18 @@ namespace AdventOfCode.Solutions.Year2020
 
         private static (bool, int) RunProgram(Instruction[] instructions)
         {
-            Dictionary<int, bool> SeenInstructons = new Dictionary<int, bool>();
+            var seenInstructions = new Dictionary<int, bool>();
             var accumulator = 0;
             var currentLine = 0;
 
-            while (!SeenInstructons.ContainsKey(currentLine))
+            while (!seenInstructions.ContainsKey(currentLine))
             {
                 if (currentLine == instructions.Length)
                     return (true, accumulator);
                 if (currentLine > instructions.Length)
                     return (false, accumulator);
 
-                SeenInstructons[currentLine] = true;
+                seenInstructions[currentLine] = true;
                 var currentInstruction = instructions[currentLine];
                 switch (currentInstruction.Id)
                 {
@@ -83,7 +82,7 @@ namespace AdventOfCode.Solutions.Year2020
 
         public Instruction(string line)
         {
-            Id = line[0..3];
+            Id = line[..3];
             Value = int.Parse(line[4..]);
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Solutions.Year2020
@@ -102,13 +101,13 @@ namespace AdventOfCode.Solutions.Year2020
                         if(value.Length > 2)
                         {
                             var unit = value.Substring(value.Length - 2, 2);
-                            var meassurement = value[0..^2];
+                            var measurement = value[..^2];
                             switch (unit)
                             {
                                 case "cm":
-                                    if (meassurement.All(char.IsDigit) && meassurement.Length == 3)
+                                    if (measurement.All(char.IsDigit) && measurement.Length == 3)
                                     {
-                                        var intValue = int.Parse(meassurement);
+                                        var intValue = int.Parse(measurement);
                                         if(intValue >= 150 && intValue <= 193)
                                         {
                                             hgt = value;
@@ -116,9 +115,9 @@ namespace AdventOfCode.Solutions.Year2020
                                     }
                                     break;
                                 case "in":
-                                    if (meassurement.All(char.IsDigit) && meassurement.Length == 2)
+                                    if (measurement.All(char.IsDigit) && measurement.Length == 2)
                                     {
-                                        var intValue = int.Parse(meassurement);
+                                        var intValue = int.Parse(measurement);
                                         if (intValue >= 59 && intValue <= 76)
                                         {
                                             hgt = value;

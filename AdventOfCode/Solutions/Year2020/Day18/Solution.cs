@@ -29,14 +29,14 @@ namespace AdventOfCode.Solutions.Year2020
         public static Item Parse(string line, bool instantPlus = false)
         {
             var values = RemoveBrackets(line, instantPlus).Split(' ');
-            Operation product = new Operation(new Val(values[0]), new Val(values[2]), values[1]);
+            var product = new Operation(new Val(values[0]), new Val(values[2]), values[1]);
 
-            for (int i = 3; i < values.Length; i += 2)
+            for (var i = 3; i < values.Length; i += 2)
             {
                 // part 2
                 if (instantPlus && values[i] == "+")
                 {
-                    Operation deepRight = product;
+                    var deepRight = product;
 
                     while (deepRight.Right is Operation op)
                         deepRight = op;

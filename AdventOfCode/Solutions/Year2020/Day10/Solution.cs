@@ -43,7 +43,7 @@ namespace AdventOfCode.Solutions.Year2020
             return ConnectAll(input.ToArray()).ToString();
         }
 
-        readonly Dictionary<long, int> buffer = new Dictionary<long, int>();
+        readonly Dictionary<long, int> buffer = new();
 
         private long ConnectAll(long[] next)
         {
@@ -61,7 +61,7 @@ namespace AdventOfCode.Solutions.Year2020
             return steps;
         }
 
-        private long ConnectNext(long current, long[] next)
+        private static long ConnectNext(long current, long[] next)
         {
             if (next.Length == 1 && next[0] - current <= 3)
                 return 1;

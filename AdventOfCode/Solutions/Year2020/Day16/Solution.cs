@@ -110,7 +110,7 @@ namespace AdventOfCode.Solutions.Year2020
         public int UpperA;
         public int UpperB;
 
-        public List<int> Index = new List<int>();
+        public List<int> Index = new();
         public int FinalIndex;
 
         public Rule(string line)

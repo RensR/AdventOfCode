@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace AdventOfCode.Solutions.Year2020
 {
-
     class Day05 : ASolution
     {
         private readonly List<long> seats;
@@ -13,41 +12,30 @@ namespace AdventOfCode.Solutions.Year2020
         {
             // new solution
             seats = Input.SplitByNewline().Select(line =>
-                Convert.ToInt64(line.Replace('F', '0').Replace('B', '1').Replace('L', '0').Replace('R', '1'), 2))
+                    Convert.ToInt64(line
+                        .Replace('F', '0')
+                        .Replace('B', '1')
+                        .Replace('L', '0')
+                        .Replace('R', '1'), 2))
                 .ToList();
             seats.Sort();
         }
 
         protected override string SolvePartOne()
         {
-            //seats = boardingPassLines.Select(CalculateNumber).ToList();
             return seats[^1].ToString();
-        }
-
-        // Old solution
-        private static long CalculateNumber(string input)
-        {
-            long seat = 0;
-            for(int i = 0; i < input.Length; i++)
-            {
-                if (input[^(i + 1)] is 'B' or 'R')
-                {
-                    seat += 1 << i;
-                }
-            }
-
-            return seat;
         }
 
         protected override string SolvePartTwo()
         {
-            for(int i = 1; i < seats.Count; i ++)
+            for (var i = 1; i < seats.Count; i++)
             {
                 if (seats[i - 1] + 1 != seats[i])
                 {
                     return (seats[i - 1] + 1).ToString();
                 }
             }
+
             return "error";
         }
     }

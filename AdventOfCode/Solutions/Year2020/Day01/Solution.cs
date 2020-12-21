@@ -2,10 +2,9 @@ using System.Linq;
 
 namespace AdventOfCode.Solutions.Year2020
 {
-
     class Day01 : ASolution
     {
-        readonly int[] _expenses;
+        private readonly int[] _expenses;
 
         public Day01() : base(01, 2020, "Report Repair")
         {
@@ -14,29 +13,21 @@ namespace AdventOfCode.Solutions.Year2020
 
         protected override string SolvePartOne()
         {
-            foreach (var a in _expenses)
-            {
-                foreach (var b in _expenses)
-                {
-                    if (a + b == 2020) return (a * b).ToString();
-                }
-            }
-            return null;
+            return (
+                from a in _expenses 
+                from b in _expenses 
+                where a + b == 2020 
+                select (a * b).ToString()).FirstOrDefault();
         }
 
         protected override string SolvePartTwo()
         {
-            foreach (var a in _expenses)
-            {
-                foreach (var b in _expenses)
-                {
-                    foreach (var c in _expenses)
-                    {
-                        if (a + b + c == 2020) return (a * b * c).ToString();
-                    }
-                }
-            }
-            return null;
+            return (
+                from a in _expenses 
+                from b in _expenses 
+                from c in _expenses 
+                where a + b + c == 2020 
+                select (a * b * c).ToString()).FirstOrDefault();
         }
     }
 }

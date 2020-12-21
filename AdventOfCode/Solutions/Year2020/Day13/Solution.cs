@@ -17,26 +17,26 @@ namespace AdventOfCode.Solutions.Year2020
 
         protected override string SolvePartOne()
         {
-            var bus = busses
+            var (time, bus) = busses
                 .Where(v => v != "x")
-                .Select(v => int.Parse(v))
-                .Select(bus => (bus - (depart % bus), bus))
+                .Select(int.Parse)
+                .Select(bus => (bus - depart % bus, bus))
                 .Min();
 
-            return (bus.Item1 * bus.bus).ToString();
+            return (time * bus).ToString();
         }
 
         protected override string SolvePartTwo()
         {
             var relevantBusses = new List<(long, long)>();
 
-            for (int i = 0; i < busses.Count; i++)
+            for (var i = 0; i < busses.Count; i++)
             {
                 if (busses[i] == "x") continue;
                 relevantBusses.Add((long.Parse(busses[i]), i));
             }
 
-            // The aggregate funtion would be nice to use but as it folds over the list
+            // The aggregate function would be nice to use but as it folds over the list
             // the last operations will merge bussed with a very large and a very small
             // loop time. This is incredibly inefficient, therefore we try to always 
             // merge busses with similar round trip times. This is also why we sort the 

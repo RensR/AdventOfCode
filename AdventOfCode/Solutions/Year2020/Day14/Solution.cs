@@ -44,7 +44,7 @@ namespace AdventOfCode.Solutions.Year2020
             return valDict.Values.Sum().ToString();
         }
 
-        readonly Dictionary<long, long> valDict2 = new Dictionary<long, long>();
+        readonly Dictionary<long, long> valDict2 = new();
 
         protected override string SolvePartTwo()
         {

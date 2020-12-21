@@ -6,21 +6,22 @@ namespace AdventOfCode.Solutions.Year2020
     class Day19 : ASolution
     {
         private readonly List<string> toTest;
-        readonly Dictionary<int, Match> rules = new Dictionary<int, Match>();
+        private readonly Dictionary<int, Match> rules = new();
 
         public Day19() : base(19, 2020, "Monster Messages")
         {
             var inputParts = Input.Split("\n\n");
 
-            foreach(var stringRule in inputParts[0].SplitByNewline())
+            foreach (var stringRule in inputParts[0].SplitByNewline())
             {
                 var idAndRule = stringRule.Split(':');
-                rules[int.Parse(idAndRule[0])] = idAndRule[1].Contains('"') ?
-                    new CharMatch(idAndRule[1]) : 
-                    new DeepMatch(stringRule);
+                var id = int.Parse(idAndRule[0]);
+                rules[id] = idAndRule[1].Contains('"') ?
+                    new CharMatch(idAndRule[1]) :
+                    new DeepMatch(idAndRule[1]);
             }
 
-            foreach(int key in rules.Keys)
+            foreach (var key in rules.Keys)
             {
                 rules[key].UpdateMatches(rules);
             }
@@ -30,38 +31,28 @@ namespace AdventOfCode.Solutions.Year2020
 
         protected override string SolvePartOne()
         {
-            return toTest.Where(s => MatchString(s, rules)).Count().ToString();
+            return toTest.Count(MatchString).ToString();
         }
 
-        private static bool MatchString(string input, Dictionary<int, Match> rules)
+        private bool MatchString(string input)
         {
             return rules[0].MatchString(input).Contains(string.Empty);
         }
 
-        private static IEnumerable<string> MatchString2(string input, Dictionary<int, Match> rules)
-        {
-            return rules[0].MatchString(input);
-        }
-
         protected override string SolvePartTwo()
         {
-            rules[8] = new CyclicMatch("8: 42 | 42 8");
-            rules[11] = new CyclicMatch("11: 42 31 | 42 11 31");
+            rules[8] = new CyclicMatch(8, "42 | 42 8");
+            rules[11] = new CyclicMatch(11, "42 31 | 42 11 31");
 
             rules[8].UpdateMatches(rules);
             rules[11].UpdateMatches(rules);
             rules[0].UpdateMatches(rules);
 
-            var result = new List<IEnumerable<string>>();
+            var empty = toTest
+                .Select(MatchString)
+                .Count(match => match);
 
-            toTest.ForEach(current =>
-            {
-                result.Add(MatchString2(current, rules));
-            });
-
-            var empty = result.Where(r => r.Contains(string.Empty)).ToList();
-
-            return empty.Count.ToString();
+            return empty.ToString();
         }
     }
 
@@ -73,18 +64,18 @@ namespace AdventOfCode.Solutions.Year2020
 
     class CharMatch : Match
     {
-        public string matchingString;
+        public string MatchingString;
 
         public CharMatch(string s)
         {
-            matchingString = s.Trim()[1..^1];
+            MatchingString = s.Trim()[1..^1];
         }
 
         public override IEnumerable<string> MatchString(string input)
         {
-            if (input.StartsWith(matchingString))
+            if (input.StartsWith(MatchingString))
             {
-                return new List<string> { input[matchingString.Length..] };
+                return new List<string> { input[MatchingString.Length..] };
             }
 
             return new List<string>();
@@ -92,29 +83,20 @@ namespace AdventOfCode.Solutions.Year2020
 
         public override void UpdateMatches(Dictionary<int, Match> matches)
         {
-            return;
         }
     }
 
     class DeepMatch : Match
     {
-        public int Id;
-        public List<List<Match>> Options = new List<List<Match>>();
-        public List<List<int>> OptionsInt = new List<List<int>>();
+        public IEnumerable<List<Match>> Options = new List<List<Match>>();
+        public List<List<int>> OptionsInt = new();
 
         public DeepMatch(string line)
         {
-            var idAndRule = line.Split(':');
-            Id = int.Parse(idAndRule[0]);
-            foreach (var option in idAndRule[1].Split('|'))
+            foreach (var option in line.Split('|'))
             {
                 OptionsInt.Add(option.Trim().Split(' ').Select(int.Parse).ToList());
             }
-        }
-
-        public DeepMatch(int id)
-        {
-            Id = id;
         }
 
         public override IEnumerable<string> MatchString(string input)
@@ -130,13 +112,13 @@ namespace AdventOfCode.Solutions.Year2020
 
             // The string to find
             var intermediateResults = new List<string> { input };
-            foreach(var match in matching)
+            foreach (var match in matching)
             {
-                foreach(var inputString in intermediateResults.Where(iresult => iresult != string.Empty).Distinct())
+                foreach (var inputString in intermediateResults.Where(iResult => iResult != string.Empty).Distinct())
                 {
                     resultString.AddRange(match.MatchString(inputString));
                 }
-                intermediateResults = new List<string> (resultString );
+                intermediateResults = new List<string>(resultString);
                 resultString = new List<string>();
             }
 
@@ -146,29 +128,28 @@ namespace AdventOfCode.Solutions.Year2020
         public override void UpdateMatches(Dictionary<int, Match> matches)
         {
             Options = (from intOption in OptionsInt
-                       select new List<Match>(intOption.Select(iop => matches[iop]))).ToList();
+                       select new List<Match>(intOption.Select(iop => matches[iop])));
         }
     }
 
     class CyclicMatch : DeepMatch
     {
-        public CyclicMatch(string line) : base(line)
+        public CyclicMatch(int id, string line) : base(line)
         {
-            var idAndLine = line.Split(':');
             OptionsInt = new List<List<int>>();
 
-            var split = idAndLine[1].Split('|');
+            var split = line.Split('|');
             var first = split[0].Trim();
             OptionsInt.Add(new List<int>(first.Split(' ').Select(int.Parse)));
 
             var second = split[1].Trim();
             var next = second;
-            for(int i = 0; i < 25; i++)
+            for (var i = 0; i < 25; i++)
             {
-                var toAdd = next.Replace(idAndLine[0], first).Trim();
+                var toAdd = next.Replace(id.ToString(), first).Trim();
                 OptionsInt.Add(new List<int>(toAdd.Split(' ').Select(int.Parse)));
 
-                next = next.Replace(idAndLine[0], second).Trim();
+                next = next.Replace(id.ToString(), second).Trim();
             }
         }
     }

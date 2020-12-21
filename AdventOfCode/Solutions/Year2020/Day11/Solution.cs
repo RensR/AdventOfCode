@@ -2,7 +2,6 @@ using System.Linq;
 
 namespace AdventOfCode.Solutions.Year2020
 {
-
     class Day11 : ASolution
     {
         string[] seating;
@@ -49,13 +48,14 @@ namespace AdventOfCode.Solutions.Year2020
                         }
                     }
 
-                    if (currentSeating[i][j] == 'L')
+                    switch (currentSeating[i][j])
                     {
-                        newLine += nextTo == 0 ? '#' : 'L';
-                    }
-                    else if (currentSeating[i][j] == '#')
-                    {
-                        newLine += nextTo >= 4 ? 'L' : '#';
+                        case 'L':
+                            newLine += nextTo == 0 ? '#' : 'L';
+                            break;
+                        case '#':
+                            newLine += nextTo >= 4 ? 'L' : '#';
+                            break;
                     }
                 }
                 newSeating[i] = newLine;
@@ -116,13 +116,14 @@ namespace AdventOfCode.Solutions.Year2020
                         }
                     }
 
-                    if (currentSeating[i][j] == 'L')
+                    switch (currentSeating[i][j])
                     {
-                        newLine += nextTo == 0 ? '#' : 'L';
-                    }
-                    else if (currentSeating[i][j] == '#')
-                    {
-                        newLine += nextTo >= 5 ? 'L' : '#';
+                        case 'L':
+                            newLine += nextTo == 0 ? '#' : 'L';
+                            break;
+                        case '#':
+                            newLine += nextTo >= 5 ? 'L' : '#';
+                            break;
                     }
                 }
                 newSeating[i] = newLine;

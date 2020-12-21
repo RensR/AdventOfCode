@@ -5,9 +5,9 @@ namespace AdventOfCode.Solutions.Year2020
 {
     class Day15 : ASolution
     {
-        readonly Dictionary<int, int> LastSpoken = new Dictionary<int, int>();
+        readonly Dictionary<int, int> LastSpoken = new();
         int previous;
-        int i = 0;
+        int i;
 
         public Day15() : base(15, 2020, "Rambunctious Recitation")
         {

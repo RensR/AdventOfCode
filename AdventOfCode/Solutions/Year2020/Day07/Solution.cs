@@ -6,9 +6,9 @@ namespace AdventOfCode.Solutions.Year2020
 {
     class Day07 : ASolution
     {
-        private readonly Dictionary<string, List<string>> isContainedIn = new Dictionary<string, List<string>>();
-        private readonly Dictionary<string, List<string>> contains = new Dictionary<string, List<string>>();
-        readonly Dictionary<string, bool> seen = new Dictionary<string, bool>();
+        private readonly Dictionary<string, List<string>> isContainedIn = new();
+        private readonly Dictionary<string, List<string>> contains = new();
+        readonly Dictionary<string, bool> seen = new();
         int count = -1;
 
         public Day07() : base(07, 2020, "Handy Haversacks")
@@ -54,8 +54,7 @@ namespace AdventOfCode.Solutions.Year2020
 
         protected override string SolvePartOne()
         {
-            var current = "shinygoldbag";
-            CheckNextBag(current);
+            CheckNextBag("shinygoldbag");
             return count.ToString();
         }
 

@@ -75,7 +75,7 @@ namespace AdventOfCode.Solutions.Year2020
 
         int CountNeighbours3D(int x, int y, int z)
         {
-            var neightbours = 0;
+            var neighbours = 0;
             for (var dx = -1; dx <= 1; dx++)
             {
                 if (x + dx < 0 || x + dx >= galaxy.GetLength(0))
@@ -92,12 +92,12 @@ namespace AdventOfCode.Solutions.Year2020
                             continue;
 
                         if (galaxy[x + dx, y + dy, z + dz])
-                            neightbours++;
+                            neighbours++;
                     }
                 }
             }
 
-            return neightbours;
+            return neighbours;
         }
 
         void Update4D()
@@ -130,7 +130,7 @@ namespace AdventOfCode.Solutions.Year2020
 
         int CountNeighbours4D(int x, int y, int z, int w)
         {
-            var neightbours = 0;
+            var neighbours = 0;
             for(var dx = -1; dx <= 1; dx++)
             {
                 if (x + dx < 0 || x + dx >= galaxy4D.GetLength(0))
@@ -153,13 +153,13 @@ namespace AdventOfCode.Solutions.Year2020
                                 continue;
 
                             if (galaxy4D[x + dx, y + dy, z + dz, w + dw])
-                                neightbours++;
+                                neighbours++;
                         }
                     }
                 }
             }
 
-            return neightbours;
+            return neighbours;
         }
 
         protected override string SolvePartTwo()
