@@ -25,7 +25,7 @@ namespace AdventOfCode.Solutions.Year2020
             {
                 rules[key].UpdateMatches(rules);
             }
-
+            RecudeRules();
             toTest = inputParts[1].SplitByNewline();
         }
 
@@ -72,6 +72,50 @@ namespace AdventOfCode.Solutions.Year2020
             var empty = result.Where(r => r.Contains(string.Empty)).ToList();
 
             return empty.Count().ToString();
+        }
+
+
+        private Dictionary<int, Match> RecudeRules()
+        {
+            var newRules = new Dictionary<int, Match>(rules);
+            var tmp = new Dictionary<int, Match>();
+            var changed = true;
+            while(changed)
+            {
+                changed = false;
+                foreach (var rule in newRules.Keys)
+                {
+                    if (newRules[rule] is DeepMatch deepRule)
+                    {
+                        var current = new DeepMatch(rule);
+
+
+                        foreach (var option in deepRule.Options)
+                        {
+                            if (option.All(o => o.GetType() == typeof(CharMatch)))
+                            {
+                                var chars = option.Select(charMatch => ((CharMatch)charMatch).matchingString);
+                                var newString = $" \"{string.Join(string.Empty, chars)}\"";
+                                current.Options.Add(new List<Match> { new CharMatch(newString) });
+                                changed = true;
+                            }
+                            else
+                            {
+                                current.Options.Add(new List<Match>(option));
+                            }
+                        }
+                        tmp[rule] = current;
+                    }
+                    else
+                    {
+                        tmp[rule] = newRules[rule];
+                    }
+                }
+                newRules = new Dictionary<int, Match>(tmp);
+            }
+           
+
+            return newRules;
         }
     }
 
@@ -122,6 +166,11 @@ namespace AdventOfCode.Solutions.Year2020
             }
         }
 
+        public DeepMatch(int id)
+        {
+            Id = id;
+        }
+
         public override IEnumerable<string> MatchString(string input)
         {
             return Options.SelectMany(option => MatchSingleString(input, option)).Distinct();
@@ -166,7 +215,7 @@ namespace AdventOfCode.Solutions.Year2020
 
             var second = split[1].Trim();
             var next = second;
-            for(int i = 0; i < 25; i++)
+            for(int i = 0; i < 10; i++)
             {
                 var toAdd = next.Replace(idAndLine[0], first).Trim();
                 OptionsInt.Add(new List<int>(toAdd.Split(' ').Select(int.Parse)));
