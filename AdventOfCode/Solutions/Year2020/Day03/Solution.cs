@@ -2,7 +2,6 @@ using System.Collections.Generic;
 
 namespace AdventOfCode.Solutions.Year2020
 {
-
     class Day03 : ASolution
     {
         List<string> lines;
