@@ -9,13 +9,13 @@ namespace AdventOfCode.Solutions.Year2020
         
         protected override string SolvePartOne()
         {
-            var dictionary = RunSim(9, 100);
-            var theOne = dictionary[dictionary[1].Next];
+            var cups = RunSim(9, 100);
+            var theOne = cups[cups[1].Next];
             var result = string.Empty;
             while (theOne.Value is not 1)
             {
                 result += theOne.Value.ToString();
-                theOne = dictionary[theOne.Next];
+                theOne = cups[theOne.Next];
             }
 
             return result;
@@ -23,21 +23,21 @@ namespace AdventOfCode.Solutions.Year2020
         
         protected override string SolvePartTwo()
         {
-            var dictionary = RunSim(1_000_000, 10_000_000);
-            var theOne = dictionary[1].Next;
-            var theTwo = (long) dictionary[theOne].Next;
+            var cups = RunSim(1_000_000, 10_000_000);
+            var theOne = cups[1].Next;
+            var theTwo = (long) cups[theOne].Next;
             return (theOne * theTwo).ToString();
         }
 
         private Dictionary<int, LinkedHashSetItem> RunSim(int maxInList, int runFor)
         {
-            var dictionary = PrepareInput(maxInList);
-            var current = dictionary[int.Parse(Input[..1])];
+            var cups = PrepareInput(maxInList);
+            var current = cups[int.Parse(Input[..1])];
 
             for (var time = 0; time < runFor; time++)
             {
                 var toRemove = current.Next;
-                var instead = dictionary[dictionary[dictionary[toRemove].Next].Next].Next;
+                var instead = cups[cups[cups[toRemove].Next].Next].Next;
                 current.Next = instead;
 
                 for (var destination = current.Value - 1; ; destination--)
@@ -45,21 +45,21 @@ namespace AdventOfCode.Solutions.Year2020
                     if (destination == 0)
                         destination = maxInList;
 
-                    if (destination == toRemove || destination == dictionary[toRemove].Next || destination == dictionary[dictionary[toRemove].Next].Next)
+                    if (destination == toRemove || destination == cups[toRemove].Next || destination == cups[cups[toRemove].Next].Next)
                         continue;
 
-                    var destinationObject = dictionary[destination];
+                    var destinationObject = cups[destination];
                     var currentNext = destinationObject.Next;
                     destinationObject.Next = toRemove;
-                    dictionary[dictionary[dictionary[toRemove].Next].Next].Next = currentNext;
+                    cups[cups[cups[toRemove].Next].Next].Next = currentNext;
 
                     break;
                 }
 
-                current = dictionary[current.Next];
+                current = cups[current.Next];
             }
 
-            return dictionary;
+            return cups;
         }
 
         private Dictionary<int, LinkedHashSetItem> PrepareInput(int items)
