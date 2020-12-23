@@ -48,7 +48,7 @@ namespace AdventOfCode.Solutions
                 if (Part1 != "")
                 {
                     watch.Stop();
-                    var elapsed = watch.ElapsedMilliseconds >= 1
+                    var elapsed = watch.ElapsedMilliseconds >= 2
                         ? watch.ElapsedMilliseconds > 2000
                             ? $"{watch.ElapsedMilliseconds / 1000,18} s"
                             : $"{watch.ElapsedMilliseconds,18} ms"
