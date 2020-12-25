@@ -7,7 +7,7 @@ namespace AdventOfCode.Solutions.Year2020
         const int maxTime = 6;
         readonly int size;
 
-        public Day17() : base(17, 2020, "")
+        public Day17() : base(17, 2020, "Conway Cubes")
         {
             var rows = Input.SplitByNewline();
             size = rows[0].Length + 2 * maxTime;

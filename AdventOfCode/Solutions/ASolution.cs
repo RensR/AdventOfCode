@@ -34,7 +34,7 @@ namespace AdventOfCode.Solutions
             if(Input == null) return;
 
             bool doOutput = false;
-            string output = $"--- Day {Day}: {Title} ---{"Runtime",20}\n";
+            string output = $"--- Day {Day,2}: {Title, 20}\n";
             if(DebugInput != null)
             {
                 output += $"!!! DebugInput used: {DebugInput}\n";
@@ -48,12 +48,12 @@ namespace AdventOfCode.Solutions
                 if (Part1 != "")
                 {
                     watch.Stop();
-                    var elapsed = watch.ElapsedMilliseconds >= 2
+                    var elapsed = watch.ElapsedMilliseconds >= 1
                         ? watch.ElapsedMilliseconds > 2000
                             ? $"{watch.ElapsedMilliseconds / 1000,18} s"
                             : $"{watch.ElapsedMilliseconds,18} ms"
                         : $"{watch.ElapsedTicks,18} ticks";
-                    output += $"Part 1: {Part1,20}{elapsed}\n";
+                    output += $"Part 1: {Part1,25}{elapsed}\n";
                     watch.Stop();
                     doOutput = true;
                 }
@@ -70,9 +70,11 @@ namespace AdventOfCode.Solutions
                 {
                     watch.Stop();
                     var elapsed = watch.ElapsedMilliseconds >= 1
-                        ? $"{watch.ElapsedMilliseconds,18} ms"
+                        ? watch.ElapsedMilliseconds > 2000
+                            ? $"{watch.ElapsedMilliseconds / 1000,18} s"
+                            : $"{watch.ElapsedMilliseconds,18} ms"
                         : $"{watch.ElapsedTicks,18} ticks";
-                    output += $"Part 2: {Part2,20}{elapsed}\n";
+                    output += $"Part 2: {Part2,25}{elapsed}\n";
                     doOutput = true;
                 }
                 else

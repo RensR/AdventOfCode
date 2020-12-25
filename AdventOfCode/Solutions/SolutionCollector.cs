@@ -34,7 +34,7 @@ namespace AdventOfCode.Solutions
             return GetEnumerator();
         }
 
-        IEnumerable<ASolution> LoadSolutions(int year, int[] days)
+        static IEnumerable<ASolution> LoadSolutions(int year, int[] days)
         {
             if(days.Sum() == 0)
             {
@@ -43,7 +43,7 @@ namespace AdventOfCode.Solutions
             
             foreach(int day in days)
             {
-                var solution = Type.GetType($"AdventOfCode.Solutions.Year{year}.Day{day.ToString("D2")}");
+                var solution = Type.GetType($"AdventOfCode.Solutions.Year{year}.Day{day:D2}");
                 if(solution != null)
                 {
                     yield return (ASolution)Activator.CreateInstance(solution);

@@ -144,7 +144,7 @@ namespace AdventOfCode.Solutions.Year2020
 
             var second = split[1].Trim();
             var next = second;
-            for (var i = 0; i < 25; i++)
+            for (var i = 0; i < 10; i++)
             {
                 var toAdd = next.Replace(id.ToString(), first).Trim();
                 OptionsInt.Add(new List<int>(toAdd.Split(' ').Select(int.Parse)));
