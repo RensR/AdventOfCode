@@ -10,7 +10,7 @@ import (
 )
 
 func main(){
-	pathPrefix, _ := filepath.Abs("2018/01/input.txt")
+	pathPrefix, _ := filepath.Abs("AdventOfCode/Solutions/2018/01/input.txt")
 	file, _ := os.Open(pathPrefix)
 	dat, err := ioutil.ReadAll(file)
 	if err != nil{
