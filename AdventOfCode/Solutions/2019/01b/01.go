@@ -10,11 +10,11 @@ import (
 	"strings"
 )
 
-func main(){
+func main() {
 	pathPrefix, _ := filepath.Abs("2019/01/input.txt")
 	file, _ := os.Open(pathPrefix)
 	dat, err := ioutil.ReadAll(file)
-	if err != nil{
+	if err != nil {
 		fmt.Println("File reading error", err)
 		return
 	}
@@ -32,9 +32,9 @@ func main(){
 	fmt.Print(fuel)
 }
 
-func calculateFuel(weight int)(fuel int){
+func calculateFuel(weight int) (fuel int) {
 	extraFuel := int(math.Floor(float64(weight/3))) - 2
-	if extraFuel <= 0{
+	if extraFuel <= 0 {
 		return 0
 	}
 	return calculateFuel(extraFuel) + extraFuel

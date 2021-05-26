@@ -9,11 +9,11 @@ import (
 	"strings"
 )
 
-func main(){
+func main() {
 	pathPrefix, _ := filepath.Abs("AdventOfCode/Solutions/2018/02/input.txt")
 	file, _ := os.Open(pathPrefix)
 	dat, err := ioutil.ReadAll(file)
-	if err != nil{
+	if err != nil {
 		fmt.Println("File reading error:", err)
 		return
 	}
@@ -23,7 +23,7 @@ func main(){
 	computeB(boxes)
 }
 
-func computeA(boxes []string){
+func computeA(boxes []string) {
 	twice := 0
 	trice := 0
 
@@ -49,11 +49,11 @@ func computeA(boxes []string){
 	fmt.Print(twice * trice)
 }
 
-func computeB(boxes []string){
+func computeB(boxes []string) {
 	sort.Strings(boxes)
 
 	for i, box := range boxes {
-		nextBox := boxes[i + 1]
+		nextBox := boxes[i+1]
 		index := -1
 		for i, _ := range box {
 			if box[i] != nextBox[i] {

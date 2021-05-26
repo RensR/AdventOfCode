@@ -10,11 +10,11 @@ import (
 	"strings"
 )
 
-func main(){
+func main() {
 	pathPrefix, _ := filepath.Abs("2019/01/input.txt")
 	file, _ := os.Open(pathPrefix)
 	dat, err := ioutil.ReadAll(file)
-	if err != nil{
+	if err != nil {
 		fmt.Println("File reading error", err)
 		return
 	}

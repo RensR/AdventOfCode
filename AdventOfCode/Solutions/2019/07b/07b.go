@@ -6,66 +6,66 @@ import (
 	"strings"
 )
 
-func main(){
+func main() {
 
-	perm := permutations([]int{5,6,7,8,9})
+	perm := permutations([]int{5, 6, 7, 8, 9})
 
 	max := 0
-	for _, permutation := range perm{
+	for _, permutation := range perm {
 		output := 0
-		for _, val := range permutation{
+		for _, val := range permutation {
 			output = intCode(val, output)
 		}
 
-		if max < output{
+		if max < output {
 			max = output
 		}
 
 	}
- 	fmt.Print(strconv.Itoa(max))
+	fmt.Print(strconv.Itoa(max))
 }
 
-func intCode(inputVar int, prevOutput int)(output int){
-	input := []int {3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26, 27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5}
+func intCode(inputVar int, prevOutput int) (output int) {
+	input := []int{3, 26, 1001, 26, -4, 26, 3, 27, 1002, 27, 2, 27, 1, 27, 26, 27, 4, 27, 1001, 28, -1, 28, 1005, 28, 6, 99, 0, 0, 5}
 	//input := []int {3,8,1001,8,10,8,105,1,0,0,21,34,59,76,101,114,195,276,357,438,99999,3,9,1001,9,4,9,1002,9,4,9,4,9,99,3,9,102,4,9,9,101,2,9,9,102,4,9,9,1001,9,3,9,102,2,9,9,4,9,99,3,9,101,4,9,9,102,5,9,9,101,5,9,9,4,9,99,3,9,102,2,9,9,1001,9,4,9,102,4,9,9,1001,9,4,9,1002,9,3,9,4,9,99,3,9,101,2,9,9,1002,9,3,9,4,9,99,3,9,101,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,1002,9,2,9,4,9,3,9,1001,9,1,9,4,9,3,9,102,2,9,9,4,9,3,9,101,1,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,1002,9,2,9,4,9,3,9,1001,9,2,9,4,9,3,9,102,2,9,9,4,9,99,3,9,101,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,1001,9,1,9,4,9,3,9,101,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,101,1,9,9,4,9,3,9,1001,9,2,9,4,9,3,9,101,2,9,9,4,9,3,9,1001,9,1,9,4,9,99,3,9,102,2,9,9,4,9,3,9,1001,9,1,9,4,9,3,9,1001,9,1,9,4,9,3,9,102,2,9,9,4,9,3,9,1001,9,2,9,4,9,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,102,2,9,9,4,9,3,9,101,1,9,9,4,9,3,9,101,2,9,9,4,9,99,3,9,1002,9,2,9,4,9,3,9,102,2,9,9,4,9,3,9,102,2,9,9,4,9,3,9,102,2,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,1002,9,2,9,4,9,3,9,101,2,9,9,4,9,3,9,102,2,9,9,4,9,3,9,101,2,9,9,4,9,3,9,101,2,9,9,4,9,99,3,9,1002,9,2,9,4,9,3,9,1001,9,1,9,4,9,3,9,101,2,9,9,4,9,3,9,101,2,9,9,4,9,3,9,101,2,9,9,4,9,3,9,101,1,9,9,4,9,3,9,1002,9,2,9,4,9,3,9,1002,9,2,9,4,9,3,9,1001,9,1,9,4,9,3,9,101,2,9,9,4,9,99}
 	maxArgLen := 5
 	for i := 0; i <= len(input); {
 		optCode := input[i] % 100
 		modes := LeftPad2Len(strconv.Itoa(input[i]), "0", maxArgLen)
 		arg1, arg2, arg3 := 0, 0, 0
-		if optCode == 1 || optCode == 2 || optCode == 4 || optCode == 5|| optCode == 6|| optCode == 7|| optCode == 8 {
-			if modes[maxArgLen - 3] == '1'{
-				arg1 = input[i + 1]
-			} else{
-				arg1 = input[input[i + 1]]
-			}
-		}
-		if optCode == 1 || optCode == 2 || optCode == 5|| optCode == 6|| optCode == 7|| optCode == 8 {
-			if modes[maxArgLen - 4] == '1'{
-				arg2 = input[i + 2]
+		if optCode == 1 || optCode == 2 || optCode == 4 || optCode == 5 || optCode == 6 || optCode == 7 || optCode == 8 {
+			if modes[maxArgLen-3] == '1' {
+				arg1 = input[i+1]
 			} else {
-				arg2 = input[input[i + 2]]
+				arg1 = input[input[i+1]]
 			}
 		}
-		if optCode == 7|| optCode == 8 {
-			arg3 = input[i + 3]
+		if optCode == 1 || optCode == 2 || optCode == 5 || optCode == 6 || optCode == 7 || optCode == 8 {
+			if modes[maxArgLen-4] == '1' {
+				arg2 = input[i+2]
+			} else {
+				arg2 = input[input[i+2]]
+			}
+		}
+		if optCode == 7 || optCode == 8 {
+			arg3 = input[i+3]
 		}
 		switch optCode {
 		case 1:
-			input[input[i + 3]] = arg1 + arg2
+			input[input[i+3]] = arg1 + arg2
 			i += 4
 		case 2:
-			input[input[i + 3]] = arg1 * arg2
+			input[input[i+3]] = arg1 * arg2
 			i += 4
 		case 3:
-			input[input[i + 1]] = inputVar
+			input[input[i+1]] = inputVar
 			inputVar = prevOutput
 			i += 2
 		case 4:
 			output = arg1
 			i += 2
 		case 5:
-			if arg1 != 0{
+			if arg1 != 0 {
 				i = arg2
 			} else {
 				i += 3
@@ -104,26 +104,26 @@ func LeftPad2Len(s string, padStr string, overallLen int) string {
 	return retStr[(len(retStr) - overallLen):]
 }
 
-func permutations(arr []int)[][]int{
+func permutations(arr []int) [][]int {
 	var helper func([]int, int)
 	res := [][]int{}
 
-	helper = func(arr []int, n int){
-		if n == 1{
+	helper = func(arr []int, n int) {
+		if n == 1 {
 			tmp := make([]int, len(arr))
 			copy(tmp, arr)
 			res = append(res, tmp)
 		} else {
-			for i := 0; i < n; i++{
-				helper(arr, n - 1)
-				if n % 2 == 1{
+			for i := 0; i < n; i++ {
+				helper(arr, n-1)
+				if n%2 == 1 {
 					tmp := arr[i]
-					arr[i] = arr[n - 1]
-					arr[n - 1] = tmp
+					arr[i] = arr[n-1]
+					arr[n-1] = tmp
 				} else {
 					tmp := arr[0]
-					arr[0] = arr[n - 1]
-					arr[n - 1] = tmp
+					arr[0] = arr[n-1]
+					arr[n-1] = tmp
 				}
 			}
 		}
