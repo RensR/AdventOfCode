@@ -1,8 +1,6 @@
 package main
 
 import (
-	"strings"
-
 	"github.com/kindermoumoute/adventofcode/pkg"
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 )
@@ -10,27 +8,25 @@ import (
 // returns part1 and part2
 func run(input string) (interface{}, interface{}) {
 	list := pkg.ParseIntList(input, "\n")
+	prev := -1
+	part1 := -1
+	part2 := 0
+	for i, measure := range list {
+		if measure > prev {
+			part1 ++
+		}
+		prev = measure
 
-	part1, part2 := 0, list[0]
-
-	//// 2D lib
-	//
-	//m := twod.NewMapFromInput(input)
-	//m:= make( twod.Map)
-	//twod.NewPoint()
-	////
+		if i >= 3 {
+			if list[i - 2] + list[i-1] + list[i] > list[i - 3] + list[i-2] + list[i-1]{
+				part2++
+			}
+		}
+	}
 
 	return part1, part2
 }
 
-func parse(s string) {
-	lines := strings.Split(s, "\n")
-	for _, line := range lines {
-		pkg.MustScanf(line, "")
-	}
-	return
-}
-
 func main() {
-	execute.Run(run, nil, puzzle, true)
+	execute.Run(run, tests, puzzle, true)
 }
