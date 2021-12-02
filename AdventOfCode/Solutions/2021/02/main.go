@@ -9,14 +9,9 @@ import (
 	"github.com/kindermoumoute/adventofcode/pkg/twod"
 )
 
-type movement struct {
-	vector twod.Vector
-	distance int
-}
-
 // returns part1 and part2
 func run(input string) (interface{}, interface{}) {
-	exit, exit2,  err := parse(input, "\n")
+	exit, exit2, err := parse(input, "\n")
 	if err != nil {
 		panic(err)
 	}
@@ -24,13 +19,13 @@ func run(input string) (interface{}, interface{}) {
 	return helpers.Abs(int64(exit.Pos.X() * exit.Pos.Y())), helpers.Abs(int64(exit2.Pos.X() * exit2.Pos.Y()))
 }
 
-func parse(s string, sep string) (*twod.P, *twod.P, error){
+func parse(s string, sep string) (*twod.P, *twod.P, error) {
 	lines := strings.Split(s, sep)
-	start := twod.NewPoint(0,0)
-	start2 := twod.NewPoint(0,0)
+	start := twod.NewPoint(0, 0)
+	start2 := twod.NewPoint(0, 0)
 	aim := 0
 	for _, line := range lines {
-		parts := strings.Split(line," ")
+		parts := strings.Split(line, " ")
 		distance, err := strconv.Atoi(parts[1])
 		if err != nil {
 			return nil, nil, err
