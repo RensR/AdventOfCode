@@ -5,11 +5,11 @@ import (
 )
 
 var tests = execute.TestCases{
-	//{
-	//	puzzle,
-	//	`1507611`,
-	//	`1880593125`,
-	//},
+	{
+		puzzle,
+		`3885894`,
+		`4375225`,
+	},
 	{
 		puzzleTest,
 		`198`,
