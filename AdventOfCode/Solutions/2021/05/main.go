@@ -14,7 +14,12 @@ func run(input string) (interface{}, interface{}) {
 	return walkTheLine(lines, false), walkTheLine(lines, true)
 }
 
-func walkHorizontal(hitMap map[int]map[int]int, line fromTo) {
+type fromTo struct {
+	from image.Point
+	to   image.Point
+}
+
+func walkVertical(hitMap map[int]map[int]int, line fromTo) {
 	makeMap(hitMap, line.from.X)
 	x := hitMap[line.from.X]
 
@@ -29,61 +34,39 @@ func walkHorizontal(hitMap map[int]map[int]int, line fromTo) {
 	}
 }
 
-func walkVertical(hitMap map[int]map[int]int, line fromTo) {
+func walkHorizontal(hitMap map[int]map[int]int, line fromTo) {
 	y := line.from.Y
 
-	if line.from.X <= line.to.X {
-		for x := line.from.X; x <= line.to.X; x++ {
-			makeMap(hitMap, x)
-			hitMap[x][y]++
-		}
-	} else {
-		for x := line.from.X; x >= line.to.X; x-- {
-			makeMap(hitMap, x)
-			hitMap[x][y]++
-		}
+	for x := line.from.X; x <= line.to.X; x++ {
+		makeMap(hitMap, x)
+		hitMap[x][y]++
 	}
 }
 
 func walkDiagonal(hitMap map[int]map[int]int, line fromTo) {
-	if line.from.X <= line.to.X {
-		x := line.from.X
-		y := line.from.Y
-		for i := 0; line.from.X+i <= line.to.X; i++ {
-			makeMap(hitMap, x+i)
-			if line.from.Y <= line.to.Y {
-				hitMap[x+i][y+i]++
-			} else {
-				hitMap[x+i][y-i]++
-			}
-		}
-	} else {
-		x := line.from.X
-		y := line.from.Y
-		for i := 0; line.from.X+i >= line.to.X; i-- {
-			makeMap(hitMap, x+i)
-			if line.from.Y <= line.to.Y {
-				hitMap[x+i][y-i]++
-			} else {
-				hitMap[x+i][y+i]++
-			}
+	x := line.from.X
+	y := line.from.Y
+	for i := 0; line.from.X+i <= line.to.X; i++ {
+		makeMap(hitMap, x+i)
+		if line.from.Y <= line.to.Y {
+			hitMap[x+i][y+i]++
+		} else {
+			hitMap[x+i][y-i]++
 		}
 	}
 }
 
-func walkTheLine(lines []fromTo, diagonal bool) int {
+func walkTheLine(lines []fromTo, diagonal bool) (count int) {
 	hitMap := make(map[int]map[int]int)
 	for _, line := range lines {
 		if line.from.X == line.to.X {
-			walkHorizontal(hitMap, line)
-		} else if line.from.Y == line.to.Y {
 			walkVertical(hitMap, line)
+		} else if line.from.Y == line.to.Y {
+			walkHorizontal(hitMap, line)
 		} else if diagonal {
 			walkDiagonal(hitMap, line)
 		}
 	}
-
-	count := 0
 
 	for _, markerX := range hitMap {
 		for _, markerY := range markerX {
@@ -101,11 +84,6 @@ func makeMap(hitMap map[int]map[int]int, x int) {
 	}
 }
 
-type fromTo struct {
-	from image.Point
-	to   image.Point
-}
-
 func parsePoint(point string) image.Point {
 	xAndY := strings.Split(point, ",")
 	x, _ := strconv.Atoi(xAndY[0])
@@ -116,22 +94,27 @@ func parsePoint(point string) image.Point {
 	}
 }
 
-func parse(s string) []fromTo {
-	lines := strings.Split(s, "\n")
-	var parsed []fromTo
-
-	for _, line := range lines {
+func parse(s string) (result []fromTo) {
+	for _, line := range strings.Split(s, "\n") {
 		if line == "" {
 			continue
 		}
 		parts := strings.Split(line, " -> ")
-		parsed = append(parsed, fromTo{
+		parsedLine := fromTo{
 			from: parsePoint(parts[0]),
 			to:   parsePoint(parts[1]),
-		})
+		}
+		// Swap to always start a line at a lower x coordinate
+		if parsedLine.from.X > parsedLine.to.X {
+			parsedLine = fromTo{
+				from: parsedLine.to,
+				to:   parsedLine.from,
+			}
+		}
+		result = append(result, parsedLine)
 	}
 
-	return parsed
+	return result
 }
 
 func main() {
