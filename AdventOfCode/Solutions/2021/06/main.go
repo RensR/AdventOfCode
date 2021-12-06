@@ -17,6 +17,8 @@ func run(input string) (a1 interface{}, a2 interface{}) {
 		if i == 80 {
 			a1 = countFish(ages)
 		}
+		// shorter but slower answer
+		// ages = []int{ages[1], ages[2], ages[3], ages[4], ages[5], ages[6], ages[7] + ages[0], ages[8], ages[0]}
 		ages = passDay(ages)
 	}
 
