@@ -80,12 +80,19 @@ func solveAllSegments(display sevenSegmentDisplay) (result int) {
 			lookupTable[displayPos] = 4
 		case 7:
 			lookupTable[displayPos] = 8
-		default:
+		case 5: // 2, 3 or 5
 			// Only 2 has an empty space bottom-right
 			if !strings.ContainsRune(displayPos, positionSheet[9][0]) {
 				lookupTable[displayPos] = 2
 				continue
 			}
+			// if they have top and top-right it's 3 else 5
+			if strings.ContainsRune(displayPos, positionSheet[8][0]) && strings.ContainsRune(displayPos, positionSheet[8][1]) {
+				lookupTable[displayPos] = 3
+				continue
+			}
+			lookupTable[displayPos] = 5
+		case 6: // 0, 6 or 9
 			// if they have bottom left they can be - 0 6 -
 			if strings.ContainsRune(displayPos, positionSheet[4][0]) {
 				// if they have top and top-right it's 0 else 6
@@ -96,26 +103,13 @@ func solveAllSegments(display sevenSegmentDisplay) (result int) {
 				lookupTable[displayPos] = 6
 				continue
 			}
-			// if not they can be - 3 5 9 -
-			// if they have 6 display on it's a 9
-			if len(displayPos) == 6 {
-				lookupTable[displayPos] = 9
-				continue
-			}
-			// if they have top and top-right it's 3 else 5
-			if strings.ContainsRune(displayPos, positionSheet[8][0]) && strings.ContainsRune(displayPos, positionSheet[8][1]) {
-				lookupTable[displayPos] = 3
-				continue
-			}
-			lookupTable[displayPos] = 5
+			lookupTable[displayPos] = 9
 		}
 	}
 
 	var resultString = ""
 	for _, value := range display.values {
-		if val, ok := lookupTable[value]; ok {
-			resultString += strconv.FormatInt(int64(val), 10)
-		}
+		resultString += strconv.FormatInt(int64(lookupTable[value]), 10)
 	}
 
 	return pkg.MustAtoi(resultString)
