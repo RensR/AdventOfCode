@@ -12,6 +12,12 @@ import (
 func run(input string) (interface{}, interface{}) {
 	pos := pkg.ParseIntList(input, ",")
 
+	tot := 0
+	for _, num := range pos {
+		tot += num
+	}
+	avg := tot / len(pos)
+
 	var min = math.MaxInt
 	for i := 0; ; i++ {
 		current := moveCrabs(pos, i)
@@ -23,7 +29,7 @@ func run(input string) (interface{}, interface{}) {
 
 	var min2 = math.MaxInt
 	seen := map[int]int{0: 0, 1: 1}
-	for i := 0; ; i++ {
+	for i := avg; ; i++ {
 		current := moveCrabsExpensive(pos, i, seen)
 		if current >= min2 {
 			break
