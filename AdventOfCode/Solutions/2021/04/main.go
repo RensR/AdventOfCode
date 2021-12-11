@@ -1,18 +1,16 @@
 package main
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/kindermoumoute/adventofcode/pkg"
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 )
 
-// returns part1 and part2
+// --- Day 4: Giant Squid ---
 func run(input string) (interface{}, interface{}) {
-	numbers, boards := parse(input, "\n")
-
-	return playGames(numbers, boards), playToLose(numbers, boards)
+	numbers, bingoBoards := parse(strings.Split(input, "\n"))
+	return playGames(numbers, bingoBoards), playToLose(numbers, bingoBoards)
 }
 
 func playGames(numbers []int, boards []board) int {
@@ -38,7 +36,6 @@ func playToLose(numbers []int, boards []board) int {
 					return result
 				}
 			}
-
 		}
 	}
 	return -1
@@ -93,7 +90,7 @@ func (b *board) sumLeft() (sum int) {
 			sum += number
 		}
 	}
-	return
+	return sum
 }
 
 func newBoard() board {
@@ -103,8 +100,7 @@ func newBoard() board {
 	}
 }
 
-func parse(s string, sep string) (numbers []int, boards []board) {
-	lines := strings.Split(s, sep)
+func parse(lines []string) (numbers []int, boards []board) {
 	board := newBoard()
 	for i, line := range lines {
 		if i == 0 {
@@ -118,23 +114,17 @@ func parse(s string, sep string) (numbers []int, boards []board) {
 			board.appendRow(line)
 		}
 	}
-	boards = append(boards, board)
-	return
+	return numbers, append(boards, board)
 }
 
-func ParseIntList(s, sep string) []int {
+func ParseIntList(s, sep string) (result []int) {
 	lines := strings.Split(s, sep)
-	var list []int
 	for _, line := range lines {
 		if line != "" {
-			nb, err := strconv.Atoi(line)
-			if err != nil {
-				panic(err)
-			}
-			list = append(list, nb)
+			result = append(result, pkg.MustAtoi(line))
 		}
 	}
-	return list
+	return result
 }
 
 func main() {

@@ -7,18 +7,9 @@ import (
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 )
 
-// returns part1 and part2
+// --- Day 3: Binary Diagnostic ---
 func run(input string) (interface{}, interface{}) {
-	one, two, err := parse(input, "\n")
-	if err != nil {
-		panic(err)
-	}
-
-	return one, two
-}
-
-func parse(s string, sep string) (int64, int64, error) {
-	lines := strings.Split(s, sep)
+	lines := strings.Split(input, "\n")
 	occ := findOcc(lines)
 
 	g, e := 0, 0
@@ -35,7 +26,7 @@ func parse(s string, sep string) (int64, int64, error) {
 		}
 	}
 
-	return int64(g * e), helpers.FromBitString(oxy[0]) * helpers.FromBitString(co2[0]), nil
+	return int64(g * e), helpers.FromBitString(oxy[0]) * helpers.FromBitString(co2[0])
 }
 
 func findOcc(lines []string) []int {

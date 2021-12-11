@@ -3,15 +3,15 @@ package main
 import (
 	"adventOfCode/helpers"
 	"image"
+	"sort"
 	"strings"
 
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 )
 
-// returns part1 and part2
+// --- Day 9: Smoke Basin ---
 func run(input string) (interface{}, interface{}) {
 	lines := strings.Split(input, "\n")
-
 	var lowests []image.Point
 
 	lowest := int32(0)
@@ -33,20 +33,17 @@ func run(input string) (interface{}, interface{}) {
 		}
 	}
 
-	bestCave, almostBest, stillGreat := 0, 0, 0
+	var caves []int
 	found := make(map[image.Point]bool)
 	for _, point := range lowests {
-		newCave := checkAround(lines, point, found)
-		if newCave >= bestCave {
-			bestCave, almostBest, stillGreat = newCave, bestCave, almostBest
-		} else if newCave >= almostBest {
-			almostBest, stillGreat = newCave, almostBest
-		} else if newCave > stillGreat {
-			stillGreat = newCave
-		}
+		caves = append(caves, checkAround(lines, point, found))
 	}
 
-	return lowest, bestCave * almostBest * stillGreat
+	sort.Slice(caves, func(i, j int) bool {
+		return caves[i] > caves[j]
+	})
+
+	return lowest, caves[0] * caves[1] * caves[2]
 }
 
 func checkAround(lines []string, point image.Point, found map[image.Point]bool) int {

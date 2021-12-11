@@ -5,7 +5,7 @@ import (
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 )
 
-// returns part1 and part2
+// --- Day 6: Lanternfish ---
 func run(input string) (a1 interface{}, a2 interface{}) {
 	ages := make([]int, 9)
 

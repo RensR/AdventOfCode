@@ -7,7 +7,7 @@ import (
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 )
 
-// returns part1 and part2
+// --- Day 10: Syntax Scoring ---
 func run(input string) (interface{}, interface{}) {
 	score := 0
 	var uncorrupted []int

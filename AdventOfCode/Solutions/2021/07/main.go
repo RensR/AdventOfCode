@@ -8,19 +8,19 @@ import (
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 )
 
-// returns part1 and part2
+// --- Day 7: The Treachery of Whales ---
 func run(input string) (interface{}, interface{}) {
-	pos := pkg.ParseIntList(input, ",")
+	positions := pkg.ParseIntList(input, ",")
 
-	tot := 0
-	for _, num := range pos {
-		tot += num
+	total := 0
+	for _, num := range positions {
+		total += num
 	}
-	avg := tot / len(pos)
+	avg := total / len(positions)
 
 	var min = math.MaxInt
 	for i := 0; ; i++ {
-		current := moveCrabs(pos, i)
+		current := moveCrabs(positions, i)
 		if current >= min {
 			break
 		}
@@ -30,7 +30,7 @@ func run(input string) (interface{}, interface{}) {
 	var min2 = math.MaxInt
 	seen := map[int]int{0: 0, 1: 1}
 	for i := avg; ; i++ {
-		current := moveCrabsExpensive(pos, i, seen)
+		current := moveCrabsExpensive(positions, i, seen)
 		if current >= min2 {
 			break
 		}

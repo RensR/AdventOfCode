@@ -2,15 +2,15 @@ package main
 
 import (
 	"image"
-	"strconv"
 	"strings"
 
+	"github.com/kindermoumoute/adventofcode/pkg"
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 )
 
-// returns part1 and part2
+// --- Day 5: Hydrothermal Venture ---
 func run(input string) (interface{}, interface{}) {
-	lines := parse(input)
+	lines := parse(strings.Split(input, "\n"))
 	return walkTheLine(lines, false), walkTheLine(lines, true)
 }
 
@@ -35,11 +35,9 @@ func walkVertical(hitMap map[int]map[int]int, line fromTo) {
 }
 
 func walkHorizontal(hitMap map[int]map[int]int, line fromTo) {
-	y := line.from.Y
-
 	for x := line.from.X; x <= line.to.X; x++ {
 		makeMap(hitMap, x)
-		hitMap[x][y]++
+		hitMap[x][line.from.Y]++
 	}
 }
 
@@ -86,23 +84,18 @@ func makeMap(hitMap map[int]map[int]int, x int) {
 
 func parsePoint(point string) image.Point {
 	xAndY := strings.Split(point, ",")
-	x, _ := strconv.Atoi(xAndY[0])
-	y, _ := strconv.Atoi(xAndY[1])
 	return image.Point{
-		X: x,
-		Y: y,
+		X: pkg.MustAtoi(xAndY[0]),
+		Y: pkg.MustAtoi(xAndY[1]),
 	}
 }
 
-func parse(s string) (result []fromTo) {
-	for _, line := range strings.Split(s, "\n") {
-		if line == "" {
-			continue
-		}
-		parts := strings.Split(line, " -> ")
+func parse(lines []string) (result []fromTo) {
+	for _, line := range lines {
+		fromAndTo := strings.Split(line, " -> ")
 		parsedLine := fromTo{
-			from: parsePoint(parts[0]),
-			to:   parsePoint(parts[1]),
+			from: parsePoint(fromAndTo[0]),
+			to:   parsePoint(fromAndTo[1]),
 		}
 		// Swap to always start a line at a lower x coordinate
 		if parsedLine.from.X > parsedLine.to.X {

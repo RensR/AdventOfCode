@@ -14,23 +14,23 @@ type sevenSegmentDisplay struct {
 	values   []string
 }
 
-// returns part1 and part2
+// --- Day 8: Seven Segment Search ---
 func run(input string) (interface{}, interface{}) {
 	var displays []sevenSegmentDisplay
 
 	for _, line := range strings.Split(input, "\n") {
 		digitsAndTarget := strings.Split(line, " | ")
-		seg := strings.Split(digitsAndTarget[0], " ")
+		segments := strings.Split(digitsAndTarget[0], " ")
 		val := strings.Split(digitsAndTarget[1], " ")
 		// sort them to enable the lookup table in the future
-		for i, s := range seg {
-			seg[i] = helpers.SortString(s)
+		for i, s := range segments {
+			segments[i] = helpers.SortString(s)
 		}
 		for i, s := range val {
 			val[i] = helpers.SortString(s)
 		}
 		displays = append(displays, sevenSegmentDisplay{
-			segments: seg,
+			segments: segments,
 			values:   val,
 		})
 	}
