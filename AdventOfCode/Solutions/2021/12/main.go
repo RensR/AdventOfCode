@@ -7,7 +7,7 @@ import (
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 )
 
-// --- Day 11: Dumbo Octopus ---
+// --- Day 12: Passage Pathing ---
 func run(input string) (interface{}, interface{}) {
 	lines := strings.Split(input, "\n")
 	caves := make(map[string][]string)
