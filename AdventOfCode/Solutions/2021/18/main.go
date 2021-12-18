@@ -7,6 +7,14 @@ import (
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 )
 
+type snailSum struct {
+	left   *snailSum
+	right  *snailSum
+	lVal   int
+	rVal   int
+	parent *snailSum
+}
+
 // --- Day 18: Snailfish ---
 func run(input string) (interface{}, interface{}) {
 	lines := strings.Split(input, "\n")
@@ -18,8 +26,6 @@ func run(input string) (interface{}, interface{}) {
 		}
 		totalSumSnail.right.parent = totalSumSnail
 		totalSumSnail.left.parent = totalSumSnail
-
-		setDepth(totalSumSnail, 0)
 		reduce(totalSumSnail)
 	}
 
@@ -36,7 +42,6 @@ func run(input string) (interface{}, interface{}) {
 			sum2.right.parent = sum2
 			sum2.left.parent = sum2
 
-			setDepth(sum2, 0)
 			result := getMagnitude(reduce(sum2))
 			if result > largestNum {
 				largestNum = result
@@ -48,27 +53,8 @@ func run(input string) (interface{}, interface{}) {
 	return result, largestNum
 }
 
-func setDepth(sum *snailSum, depth int64) {
-	sum.depth = depth
-	if sum.left != nil {
-		setDepth(sum.left, depth+1)
-	}
-	if sum.right != nil {
-		setDepth(sum.right, depth+1)
-	}
-}
-
-type snailSum struct {
-	left   *snailSum
-	right  *snailSum
-	depth  int64
-	lVal   int
-	rVal   int
-	parent *snailSum
-}
-
-func (sum *snailSum) tryExplode() bool {
-	if sum.depth >= 4 && sum.left == nil && sum.right == nil {
+func (sum *snailSum) tryExplode(depth int) bool {
+	if depth >= 4 && sum.left == nil && sum.right == nil {
 		addLeft(sum, sum.lVal)
 		addRight(sum, sum.rVal)
 
@@ -82,12 +68,12 @@ func (sum *snailSum) tryExplode() bool {
 		return true
 	} else {
 		if sum.left != nil {
-			if sum.left.tryExplode() {
+			if sum.left.tryExplode(depth + 1) {
 				return true
 			}
 		}
 		if sum.right != nil {
-			return sum.right.tryExplode()
+			return sum.right.tryExplode(depth + 1)
 		}
 		return false
 	}
@@ -146,7 +132,6 @@ func (sum *snailSum) trySplit() bool {
 	}
 	if sum.lVal > 9 {
 		sum.left = &snailSum{
-			depth:  sum.depth + 1,
 			lVal:   sum.lVal / 2,
 			rVal:   (sum.lVal + 1) / 2,
 			parent: sum,
@@ -157,7 +142,6 @@ func (sum *snailSum) trySplit() bool {
 		return true
 	} else if sum.rVal > 9 {
 		sum.right = &snailSum{
-			depth:  sum.depth + 1,
 			lVal:   sum.rVal / 2,
 			rVal:   (sum.rVal + 1) / 2,
 			parent: sum,
@@ -170,7 +154,7 @@ func (sum *snailSum) trySplit() bool {
 
 func reduce(sum *snailSum) *snailSum {
 	for {
-		if !sum.tryExplode() {
+		if !sum.tryExplode(0) {
 			if !sum.trySplit() {
 				return sum
 			}
