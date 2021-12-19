@@ -22,7 +22,22 @@ type location struct {
 // --- Day 19: Beacon scanner ---
 func run(input string) (interface{}, interface{}) {
 	lines := strings.Split(input, "\n")
+	scanners, located := parseScanners(lines)
 
+	for i := 0; i < len(located); i++ {
+		for j := 0; j < len(scanners); j++ {
+			if getMatchLevel(&located[i], &scanners[j]) {
+				located = append(located, scanners[j])
+				scanners = append(scanners[:j], scanners[j+1:]...)
+				j--
+			}
+		}
+	}
+
+	return countBeacons(located)
+}
+
+func parseScanners(lines []string) ([]Scanner, []Scanner) {
 	var scanners []Scanner
 	var scanner = Scanner{}
 	for _, line := range lines {
@@ -44,24 +59,8 @@ func run(input string) (interface{}, interface{}) {
 			z: pkg.MustAtoi(coords[2]),
 		})
 	}
-	scanners = append(scanners, scanner)
-
-	scanners[0].loc = &location{x: 0, y: 0, z: 0}
-
-	located := []Scanner{scanners[0]}
-	scanners = scanners[1:]
-
-	for i := 0; i < len(located); i++ {
-		for j := 0; j < len(scanners); j++ {
-			if getMatchLevel(&located[i], &scanners[j]) {
-				located = append(located, scanners[j])
-				scanners = append(scanners[:j], scanners[j+1:]...)
-				j--
-			}
-		}
-	}
-
-	return countBeacons(located)
+	scanner.loc = &location{x: 0, y: 0, z: 0}
+	return scanners, []Scanner{scanner}
 }
 
 func countBeacons(scanners []Scanner) (int, int) {
@@ -90,24 +89,17 @@ func countBeacons(scanners []Scanner) (int, int) {
 }
 
 func getMatchLevel(sa *Scanner, sb *Scanner) bool {
-	if sa.loc == nil {
-		return false
-	}
-
 	for xRot := 0; xRot < 4; xRot++ {
 		for yRot := 0; yRot < 4; yRot++ {
 			for zRot := 0; zRot < 4; zRot++ {
 				if isMatch(sa, sb) {
 					return true
 				}
-				// rotate z axis
-				rotate(sb, 3)
+				rotate(sb, 3) // rotate z axis
 			}
-			// rotate y axis
-			rotate(sb, 2)
+			rotate(sb, 2) // rotate y axis
 		}
-		// rotate x axis
-		rotate(sb, 1)
+		rotate(sb, 1) // rotate x axis
 	}
 	return false
 }
@@ -152,16 +144,12 @@ func isMatch(sa *Scanner, sb *Scanner) bool {
 					}
 				}
 			}
-			if matching >= 2 || translationVector.x == 68 || translationVector.x == -68 {
-				matching += 0
-			}
 			if matching >= 12 {
-				newLoc := location{
+				sb.loc = &location{
 					x: sa.loc.x + translationVector.x,
 					y: sa.loc.y + translationVector.y,
 					z: sa.loc.z + translationVector.z,
 				}
-				sb.loc = &newLoc
 				return true
 			}
 		}
