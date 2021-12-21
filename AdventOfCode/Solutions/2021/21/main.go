@@ -70,26 +70,20 @@ func quantumLeap(current board, lookup map[board]board) (p1Wins int64, p2Wins in
 		return val.p1, val.p2
 	}
 
-	for _, throw := range getThrows() {
-		var b = board{p1: current.p1, p2: current.p2, p1Score: current.p1Score, p2Score: current.p2Score, playerOneTurn: current.playerOneTurn}
-		b.Move(throw)
-		dp1, dp2 := quantumLeap(b, lookup)
-		p1Wins += dp1
-		p2Wins += dp2
-	}
-	lookup[current] = board{p1: p1Wins, p2: p2Wins}
-	return p1Wins, p2Wins
-}
-
-func getThrows() (throws []int64) {
-	for a := 1; a <= 3; a++ {
-		for b := 1; b <= 3; b++ {
-			for c := 1; c <= 3; c++ {
-				throws = append(throws, int64(a+b+c))
+	for r1 := 1; r1 <= 3; r1++ {
+		for r2 := 1; r2 <= 3; r2++ {
+			for r3 := 1; r3 <= 3; r3++ {
+				b := current
+				b.Move(int64(r1 + r2 + r3))
+				dp1, dp2 := quantumLeap(b, lookup)
+				p1Wins += dp1
+				p2Wins += dp2
 			}
 		}
 	}
-	return throws
+
+	lookup[current] = board{p1: p1Wins, p2: p2Wins}
+	return p1Wins, p2Wins
 }
 
 func main() {
