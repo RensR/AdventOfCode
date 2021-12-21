@@ -12,8 +12,8 @@ var tests = execute.TestCases{
 	},
 	{
 		puzzle,
-		``,
-		``,
+		`1073709`,
+		`148747830493442`,
 	},
 }
 
