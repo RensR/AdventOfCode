@@ -28,11 +28,11 @@ type board struct {
 }
 
 type dice struct {
-	value int64
-	wraps int64
+	value int
+	wraps int
 }
 
-func (d *dice) roll() int64 {
+func (d *dice) roll() int {
 	if d.value >= 100 {
 		d.value = 0
 		d.wraps++
@@ -41,24 +41,24 @@ func (d *dice) roll() int64 {
 	return d.value
 }
 
-func (b *board) Move(steps int64) {
+func (b *board) Move(steps int) {
 	if b.playerOneTurn {
-		b.p1 += steps
+		b.p1 += int64(steps)
 		b.p1Score += int((b.p1-1)%10 + 1)
 	} else {
-		b.p2 += steps
+		b.p2 += int64(steps)
 		b.p2Score += int((b.p2-1)%10 + 1)
 	}
 	b.playerOneTurn = !b.playerOneTurn
 }
 
-func leap(b board) int64 {
+func leap(b board) int {
 	d100 := dice{value: 0, wraps: 0}
 
 	for b.p1Score < 1000 && b.p2Score < 1000 {
 		b.Move(d100.roll() + d100.roll() + d100.roll())
 	}
-	return helpers.Min64(int64(b.p1Score), int64(b.p2Score)) * (d100.wraps*100 + d100.value)
+	return helpers.Min(b.p1Score, b.p2Score) * (d100.wraps*100 + d100.value)
 }
 
 func quantumLeap(current board, lookup map[board]board) (p1Wins int64, p2Wins int64) {
@@ -74,7 +74,7 @@ func quantumLeap(current board, lookup map[board]board) (p1Wins int64, p2Wins in
 		for r2 := 1; r2 <= 3; r2++ {
 			for r3 := 1; r3 <= 3; r3++ {
 				b := current
-				b.Move(int64(r1 + r2 + r3))
+				b.Move(r1 + r2 + r3)
 				dp1, dp2 := quantumLeap(b, lookup)
 				p1Wins += dp1
 				p2Wins += dp2
