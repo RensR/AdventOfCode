@@ -22,9 +22,9 @@ func run(input string) (interface{}, interface{}) {
 	lines := strings.Split(input, "\n")
 	gameOfLife := make(map[location]bool)
 
-	for y := 2; y < len(lines); y++ {
-		for x := 0; x < len(lines[y]); x++ {
-			gameOfLife[location{X: x, Y: y}] = lines[y][x] == '#'
+	for y, l := range lines[2:] {
+		for x, v := range l {
+			gameOfLife[location{X: x, Y: y}] = v == '#'
 		}
 	}
 
