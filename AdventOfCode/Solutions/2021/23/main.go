@@ -4,9 +4,9 @@ import (
 	"adventOfCode/helpers"
 	"fmt"
 	"strings"
-	"sync"
 
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
+	"gopkg.in/karalabe/cookiejar.v2/collections/prque"
 )
 
 var letters = []uint8{'A', 'B', 'C', 'D'}
@@ -24,20 +24,23 @@ func run2(lines []string) int {
 	return runSimulation(parseInput(lines)).Distance
 }
 
-func runSimulation(layout [][]uint8, pods []Amphipod) *Move {
-	Q := NodeQ{}
-	Q.NewQ()
-	currentState := &Move{Distance: 0, state: State{pods, layout}}
+func runSimulation(layout [][]uint8, pods []Amphipod) Move {
+	pq := prque.New()
+	pq.Push(Move{Distance: 0, state: State{pods, layout}}, 0)
 	seenStates := make(map[string]int)
-	for ; !currentState.state.IsFinal(); currentState = Q.Dequeue() {
-		moves := currentState.state.getValidMoves(seenStates, currentState.Distance)
+	for {
+		newMoveObject := pq.PopItem()
+		currentMove, _ := newMoveObject.(Move)
+		if currentMove.state.IsFinal() {
+			printPathTaken(currentMove)
+			return currentMove
+		}
+		moves := currentMove.state.getValidMoves(seenStates, currentMove.Distance)
 		for _, move := range moves {
-			move.oldMove = currentState
-			Q.Enqueue(move)
+			move.oldMove = &currentMove
+			pq.Push(move, float32(move.Distance))
 		}
 	}
-	printPathTaken(*currentState)
-	return currentState
 }
 
 func printPathTaken(move Move) {
@@ -241,74 +244,8 @@ func main() {
 	execute.Run(run, tests, puzzle, true)
 }
 
-type NodeQ struct {
-	Items []Move
-	Lock  sync.RWMutex
-}
-
 type Move struct {
 	Distance int
 	state    State
 	oldMove  *Move
-}
-
-func (s *NodeQ) Enqueue(t Move) {
-	s.Lock.Lock()
-	if len(s.Items) == 0 {
-		s.Items = append(s.Items, t)
-		s.Lock.Unlock()
-		return
-	}
-	var insertFlag bool
-	for k, v := range s.Items {
-		if t.Distance < v.Distance {
-			if k > 0 {
-				s.Items = append(s.Items[:k+1], s.Items[k:]...)
-				s.Items[k] = t
-				insertFlag = true
-			} else {
-				s.Items = append([]Move{t}, s.Items...)
-				insertFlag = true
-			}
-		}
-		if insertFlag {
-			break
-		}
-	}
-	if !insertFlag {
-		s.Items = append(s.Items, t)
-	}
-	//s.items = append(s.items, t)
-	s.Lock.Unlock()
-}
-
-// Dequeue removes a Node from the start of the queue
-func (s *NodeQ) Dequeue() *Move {
-	s.Lock.Lock()
-	item := s.Items[0]
-	s.Items = s.Items[1:len(s.Items)]
-	s.Lock.Unlock()
-	return &item
-}
-
-//NewQ Creates New Queue
-func (s *NodeQ) NewQ() *NodeQ {
-	s.Lock.Lock()
-	s.Items = []Move{}
-	s.Lock.Unlock()
-	return s
-}
-
-// IsEmpty returns true if the queue is empty
-func (s *NodeQ) IsEmpty() bool {
-	s.Lock.RLock()
-	defer s.Lock.RUnlock()
-	return len(s.Items) == 0
-}
-
-// Size returns the number of Nodes in the queue
-func (s *NodeQ) Size() int {
-	s.Lock.RLock()
-	defer s.Lock.RUnlock()
-	return len(s.Items)
 }
