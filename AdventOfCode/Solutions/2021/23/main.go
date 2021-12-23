@@ -10,35 +10,27 @@ import (
 )
 
 var letters = []uint8{'A', 'B', 'C', 'D'}
+var moveCost = map[int32]int{'A': 1, 'B': 10, 'C': 100, 'D': 1000}
 
 // --- Day 23: Amphipod ---
 func run(input string) (interface{}, interface{}) {
 	lines := strings.Split(input, "\n")
-	moveCost := map[int32]int{'A': 1, 'B': 10, 'C': 100, 'D': 1000}
+	return runSimulation(parseInput(lines)).Distance, run2(lines)
+}
 
-	var layout = make([][]uint8, len(lines[0]))
-	var pods [8]Amphipod
-	index := 0
-	for y, line := range lines {
-		for x, c := range line {
-			layout[x] = append(layout[x], uint8(c))
-			switch c {
-			case 'A', 'B', 'C', 'D':
-				pods[index] = Amphipod{
-					index:    index,
-					x:        x,
-					y:        y,
-					char:     uint8(c),
-					moveCost: moveCost[c],
-				}
-				index++
-			}
-		}
-	}
+// 40290 too high
+func run2(lines []string) int {
+	end := []string{lines[3], lines[4]}
+	lines = append(append(lines[0:3], "  #D#C#B#A#  ", "  #D#B#A#C#  "), end...)
 
+	finalState := runSimulation(parseInput(lines))
+	return finalState.Distance
+}
+
+func runSimulation(layout [][]uint8, pods []Amphipod) *Move {
 	Q := NodeQ{}
 	Q.NewQ()
-	currentState := &Move{Distance: 0, state: State{pods, layout, 4}}
+	currentState := &Move{Distance: 0, state: State{pods, layout}}
 	seenStates := make(map[string]bool)
 	for !currentState.state.IsFinal() {
 		moves := currentState.state.getValidMoves(seenStates, currentState.Distance)
@@ -49,40 +41,52 @@ func run(input string) (interface{}, interface{}) {
 
 		currentState = Q.Dequeue()
 	}
-	printing := currentState
+	printPathTaken(*currentState)
+	return currentState
+}
+
+func printPathTaken(move Move) {
+	printing := &move
 	for printing != nil {
-		(*printing).state.Print()
+		(*printing).state.GetSignature(true)
 		printing = (*printing).oldMove
 	}
-	return currentState.Distance, run2(lines)
 }
 
-func run2(lines []string) int64 {
-
-	return 0
-}
-
-func (state State) Print() string {
-	totalString := ""
-	for y := 0; y < 4; y++ {
-		line := ""
-		for x, _ := range state.layout {
-			line += string(state.layout[x][y])
+func parseInput(lines []string) ([][]uint8, []Amphipod) {
+	var layout = make([][]uint8, len(lines[0]))
+	var pods []Amphipod
+	index := 0
+	for y, line := range lines {
+		for x, c := range line {
+			layout[x] = append(layout[x], uint8(c))
+			switch c {
+			case 'A', 'B', 'C', 'D':
+				pods = append(pods, Amphipod{
+					index:    index,
+					x:        x,
+					y:        y,
+					char:     uint8(c),
+					moveCost: moveCost[c],
+				})
+				index++
+			}
 		}
-		fmt.Println(line)
-		line += totalString
 	}
-	return totalString
+	return layout, pods
 }
 
-func (state State) GetSignature() string {
+func (state State) GetSignature(print bool) string {
 	totalString := ""
-	for y := 0; y < 4; y++ {
+	for y := 0; y < len(state.layout[0]); y++ {
 		line := ""
-		for x, _ := range state.layout {
+		for x := range state.layout {
 			line += string(state.layout[x][y])
 		}
-		totalString += line
+		totalString += line + "\n"
+	}
+	if print {
+		fmt.Println(totalString)
 	}
 	return totalString
 }
@@ -96,16 +100,14 @@ func (state State) getValidMoves(lookup map[string]bool, currentDistance int) (m
 		seenThisPod := map[helpers.Location]bool{helpers.Location{X: pod.x, Y: pod.y}: true}
 		newMoves := DoStep(state, pod, 0, seenThisPod, pod.y < 2)
 		for _, move := range newMoves {
-			signature := move.state.GetSignature()
+			signature := move.state.GetSignature(false)
 			if lookup[signature] && !move.state.IsFinal() {
 				continue
 			}
 			lookup[signature] = true
-			//move.state.Print()
 			move.Distance += currentDistance
 			moves = append(moves, move)
 		}
-
 	}
 	return moves
 }
@@ -126,27 +128,28 @@ func DoStep(state State, pod Amphipod, steps int, seenThisPod map[helpers.Locati
 			newState := makeCopyState(state, pod, xx, yy)
 			switch xx {
 			case 3, 5, 7, 9:
-				if yy == 1 || pod.y == 3 { // do another step, never stop here
+				switch direction.Y {
+				case 0, -1: // going left/right/up
 					moves = append(moves, DoStep(newState, newState.pods[pod.index], steps, seenThisPod, fromHallway)...)
-				} else { // final home checks, if the room isn't theirs don't use it
+				case 1: // going down
+					// if he's going in, but it's not his room
 					if xx != getXForPodId(pod.char) {
 						continue
 					}
-					if state.layout[xx][3] == pod.char {
-						// Done with the entire letter, move to y = 2
+					if newState.pods[pod.index].IsDone(newState) {
 						moves = append(moves, Move{
 							Distance: steps * pod.moveCost,
 							state:    newState,
 						})
-					} else if state.layout[xx][3] == '.' {
-						// Done with this pod, move to y = 3
-						steps++
-						newState.layout[xx][2] = '.'
-						newState.layout[xx][3] = pod.char
-						moves = append(moves, Move{
-							Distance: steps * pod.moveCost,
-							state:    newState,
-						})
+					}
+					wrongEntitiesInStack := false
+					for y := len(state.layout[0]) - 2; y > 1 && !wrongEntitiesInStack; y-- {
+						if state.layout[xx][y] != pod.char && state.layout[xx][y] != '.' {
+							wrongEntitiesInStack = true
+						}
+					}
+					if !wrongEntitiesInStack {
+						moves = append(moves, DoStep(newState, newState.pods[pod.index], steps, seenThisPod, fromHallway)...)
 					}
 				}
 			default:
@@ -165,16 +168,15 @@ func DoStep(state State, pod Amphipod, steps int, seenThisPod map[helpers.Locati
 }
 
 func makeCopyState(state State, pod Amphipod, xx int, yy int) State {
-	newState := State{pods: [8]Amphipod{}, layout: makeCopyLayout(state.layout)}
+	newState := State{pods: []Amphipod{}, layout: makeCopyLayout(state.layout)}
 	newState.layout[pod.x][pod.y] = '.'
 	newState.layout[xx][yy] = pod.char
 	for _, amphi := range state.pods {
-		copyAmphi := amphi
-		if copyAmphi.index == pod.index {
-			copyAmphi.x = xx
-			copyAmphi.y = yy
+		if amphi.index == pod.index {
+			amphi.x = xx
+			amphi.y = yy
 		}
-		newState.pods[amphi.index] = copyAmphi
+		newState.pods = append(newState.pods, amphi)
 	}
 	return newState
 }
@@ -189,24 +191,34 @@ func makeCopyLayout(layout [][]uint8) (result [][]uint8) {
 	return cpy
 }
 
+// IsDone checks if a given Amphipod never needs to move again
 func (pod Amphipod) IsDone(state State) bool {
 	x := getXForPodId(pod.char)
-	return pod.x == x && (pod.y == 3 || pod.y == 2 && state.layout[x][3] == pod.char)
+	if pod.x != x {
+		return false
+	}
+
+	for y := pod.y + 1; y < len(state.layout[0])-1; y++ {
+		if state.layout[x][y] != pod.char {
+			return false
+		}
+	}
+	return true
 }
 
 func getXForPodId(podId uint8) int {
 	return int((podId-'A')*2) + 3
 }
 
+// IsFinal returns true if all Amphipods are in the proper room
 func (state State) IsFinal() bool {
 	for _, letter := range letters {
 		x := getXForPodId(letter)
 
-		for i := 2; i < state.height+2; i++ {
-
-		}
-		if state.layout[x][2] != letter || state.layout[x][3] != letter {
-			return false
+		for y := 2; y < len(state.layout[0])-1; y++ {
+			if state.layout[x][y] != letter {
+				return false
+			}
 		}
 	}
 	return true
@@ -221,9 +233,8 @@ type Amphipod struct {
 }
 
 type State struct {
-	pods   [8]Amphipod
+	pods   []Amphipod
 	layout [][]uint8
-	height int
 }
 
 func main() {

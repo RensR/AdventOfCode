@@ -8,7 +8,7 @@ var tests = execute.TestCases{
 	{
 		puzzleTest,
 		`12521`,
-		``,
+		`44169`,
 	},
 	{
 		puzzle,
@@ -18,9 +18,11 @@ var tests = execute.TestCases{
 }
 
 var test = `#############
-#.....D.....#
-###.#B#C#D###
-  #A#B#C#A#  
+#AA.......AD#
+###.#B#C#.###
+  #.#B#C#.#  
+  #D#B#C#D#  
+  #A#B#C#D#  
   #########  `
 
 var puzzleTest = `#############
