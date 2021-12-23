@@ -5,6 +5,10 @@ import (
 	"strings"
 )
 
+type Location struct {
+	X int
+	Y int
+}
 type direction struct {
 	X int
 	Y int

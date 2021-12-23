@@ -70,11 +70,7 @@ func initializeReboot(actions []action) (on int64) {
 		for x := a.from.x; x <= a.to.x; x++ {
 			for y := a.from.y; y <= a.to.y; y++ {
 				for z := a.from.z; z <= a.to.z; z++ {
-					field[coord{
-						x: x,
-						y: y,
-						z: z,
-					}] = a.on
+					field[coord{x: x, y: y, z: z}] = a.on
 				}
 			}
 		}
