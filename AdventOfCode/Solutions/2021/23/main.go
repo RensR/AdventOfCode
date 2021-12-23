@@ -18,28 +18,23 @@ func run(input string) (interface{}, interface{}) {
 	return runSimulation(parseInput(lines)).Distance, run2(lines)
 }
 
-// 40290 too high
 func run2(lines []string) int {
 	end := []string{lines[3], lines[4]}
 	lines = append(append(lines[0:3], "  #D#C#B#A#  ", "  #D#B#A#C#  "), end...)
-
-	finalState := runSimulation(parseInput(lines))
-	return finalState.Distance
+	return runSimulation(parseInput(lines)).Distance
 }
 
 func runSimulation(layout [][]uint8, pods []Amphipod) *Move {
 	Q := NodeQ{}
 	Q.NewQ()
 	currentState := &Move{Distance: 0, state: State{pods, layout}}
-	seenStates := make(map[string]bool)
-	for !currentState.state.IsFinal() {
+	seenStates := make(map[string]int)
+	for ; !currentState.state.IsFinal(); currentState = Q.Dequeue() {
 		moves := currentState.state.getValidMoves(seenStates, currentState.Distance)
 		for _, move := range moves {
 			move.oldMove = currentState
 			Q.Enqueue(move)
 		}
-
-		currentState = Q.Dequeue()
 	}
 	printPathTaken(*currentState)
 	return currentState
@@ -78,7 +73,7 @@ func parseInput(lines []string) ([][]uint8, []Amphipod) {
 
 func (state State) GetSignature(print bool) string {
 	totalString := ""
-	for y := 0; y < len(state.layout[0]); y++ {
+	for y := 1; y < len(state.layout[0])-1; y++ {
 		line := ""
 		for x := range state.layout {
 			line += string(state.layout[x][y])
@@ -91,21 +86,26 @@ func (state State) GetSignature(print bool) string {
 	return totalString
 }
 
-func (state State) getValidMoves(lookup map[string]bool, currentDistance int) (moves []Move) {
+func (state State) getValidMoves(lookup map[string]int, currentDistance int) (moves []Move) {
 	for _, pod := range state.pods {
 		if pod.IsDone(state) {
 			continue
 		}
-
 		seenThisPod := map[helpers.Location]bool{helpers.Location{X: pod.x, Y: pod.y}: true}
 		newMoves := DoStep(state, pod, 0, seenThisPod, pod.y < 2)
 		for _, move := range newMoves {
+			move.Distance += currentDistance
 			signature := move.state.GetSignature(false)
-			if lookup[signature] && !move.state.IsFinal() {
+			if move.state.IsFinal() {
+				moves = append(moves, move)
 				continue
 			}
-			lookup[signature] = true
-			move.Distance += currentDistance
+
+			if val, ok := lookup[signature]; ok && move.Distance >= val {
+				continue
+			}
+
+			lookup[signature] = move.Distance
 			moves = append(moves, move)
 		}
 	}

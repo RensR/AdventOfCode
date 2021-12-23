@@ -6,6 +6,11 @@ import (
 
 var tests = execute.TestCases{
 	{
+		test,
+		`16059`,
+		``,
+	},
+	{
 		puzzleTest,
 		`12521`,
 		`44169`,
@@ -13,16 +18,14 @@ var tests = execute.TestCases{
 	{
 		puzzle,
 		`11516`,
-		``,
+		`40272`,
 	},
 }
 
 var test = `#############
-#AA.......AD#
-###.#B#C#.###
-  #.#B#C#.#  
-  #D#B#C#D#  
-  #A#B#C#D#  
+#...........#
+###D#D#C#C###
+  #B#A#B#A#  
   #########  `
 
 var puzzleTest = `#############
