@@ -1,8 +1,9 @@
 package main
 
 import (
-	"adventOfCode/helpers"
 	"strings"
+
+	"adventOfCode/helpers"
 
 	"github.com/kindermoumoute/adventofcode/pkg"
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
@@ -105,14 +106,14 @@ func (a action) split(b action) (actions []action) {
 	overlap := action{
 		on: b.on,
 		from: coord{
-			x: helpers.Max64(a.from.x, b.from.x),
-			y: helpers.Max64(a.from.y, b.from.y),
-			z: helpers.Max64(a.from.z, b.from.z),
+			x: helpers.Max(a.from.x, b.from.x),
+			y: helpers.Max(a.from.y, b.from.y),
+			z: helpers.Max(a.from.z, b.from.z),
 		},
 		to: coord{
-			x: helpers.Min64(a.to.x, b.to.x),
-			y: helpers.Min64(a.to.y, b.to.y),
-			z: helpers.Min64(a.to.z, b.to.z),
+			x: helpers.Min(a.to.x, b.to.x),
+			y: helpers.Min(a.to.y, b.to.y),
+			z: helpers.Min(a.to.z, b.to.z),
 		},
 	}
 	actions = append(actions, overlap)

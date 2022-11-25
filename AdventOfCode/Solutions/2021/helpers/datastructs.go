@@ -43,7 +43,7 @@ func (s *NodeQueue) Enqueue(t Vertex) {
 	s.Lock.Unlock()
 }
 
-// Dequeue removes an Node from the start of the queue
+// Dequeue removes a Node from the start of the queue
 func (s *NodeQueue) Dequeue() *Vertex {
 	s.Lock.Lock()
 	item := s.Items[0]

@@ -1,8 +1,11 @@
 module adventOfCode
 
-go 1.17
+go 1.18
 
-require github.com/kindermoumoute/adventofcode v0.0.0-20201225075527-682ab4e0f685
+require (
+	github.com/kindermoumoute/adventofcode v0.0.0-20201225075527-682ab4e0f685
+	gopkg.in/karalabe/cookiejar.v2 v2.0.0-20150724131613-8dcd6a7f4951
+)
 
 require (
 	github.com/beefsack/go-astar v0.0.0-20171024231011-f324bbb0d6f7 // indirect
@@ -14,5 +17,4 @@ require (
 	github.com/go-gl/mathgl v0.0.0-20190713194549-592312d8590a // indirect
 	github.com/pkg/errors v0.8.1 // indirect
 	golang.org/x/image v0.0.0-20190523035834-f03afa92d3ff // indirect
-	gopkg.in/karalabe/cookiejar.v2 v2.0.0-20150724131613-8dcd6a7f4951 // indirect
 )

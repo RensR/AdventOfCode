@@ -9,19 +9,19 @@ type Location struct {
 	X int
 	Y int
 }
-type direction struct {
+type Direction struct {
 	X int
 	Y int
 }
 
-var UpDownLeftRight = []direction{
+var UpDownLeftRight = []Direction{
 	{X: -1, Y: 0},
 	{X: 1, Y: 0},
 	{X: 0, Y: 1},
 	{X: 0, Y: -1},
 }
 
-var AllDirections = []direction{
+var AllDirections = []Direction{
 	{X: -1, Y: 0},
 	{X: 1, Y: 0},
 	{X: 0, Y: 1},

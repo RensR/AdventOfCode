@@ -1,8 +1,9 @@
 package main
 
 import (
-	"adventOfCode/helpers"
 	"strings"
+
+	"adventOfCode/helpers"
 
 	"github.com/kindermoumoute/adventofcode/pkg"
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
@@ -15,7 +16,7 @@ func run(input string) (interface{}, interface{}) {
 	P2 := int64(pkg.MustAtoi(strings.Split(lines[1], ": ")[1]))
 
 	a1 := leap(board{p1: P1, p2: P2, p1Score: 0, p2Score: 0, playerOneTurn: true})
-	a2 := helpers.Max64(quantumLeap(board{p1: P1, p2: P2, p1Score: 0, p2Score: 0, playerOneTurn: true}, make(map[board]board)))
+	a2 := helpers.Max(quantumLeap(board{p1: P1, p2: P2, p1Score: 0, p2Score: 0, playerOneTurn: true}, make(map[board]board)))
 	return a1, a2
 }
 

@@ -1,8 +1,9 @@
 package main
 
 import (
-	"adventOfCode/helpers"
 	"math"
+
+	"adventOfCode/helpers"
 
 	"github.com/kindermoumoute/adventofcode/pkg"
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
@@ -42,14 +43,14 @@ func run(input string) (interface{}, interface{}) {
 
 func moveCrabs(pos []int, newPos int) (movement int) {
 	for _, num := range pos {
-		movement += helpers.AbsInt(num - newPos)
+		movement += helpers.Abs(num - newPos)
 	}
 	return movement
 }
 
 func moveCrabsExpensive(pos []int, newPos int, seen map[int]int) (movement int) {
 	for _, num := range pos {
-		movement += getFromMap(seen, helpers.AbsInt(num-newPos))
+		movement += getFromMap(seen, helpers.Abs(num-newPos))
 	}
 	return movement
 }

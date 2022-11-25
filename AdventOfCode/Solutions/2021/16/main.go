@@ -1,11 +1,12 @@
 package main
 
 import (
-	"adventOfCode/helpers"
 	"encoding/hex"
 	"fmt"
 	"math"
 	"strconv"
+
+	"adventOfCode/helpers"
 
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 )
@@ -72,11 +73,11 @@ func parseBits(bits string, start int64) (versionSum int64, operatorResult int64
 		case 2: // min
 			operatorResult = math.MaxInt
 			for _, val := range values {
-				operatorResult = helpers.Min64(operatorResult, val)
+				operatorResult = helpers.Min(operatorResult, val)
 			}
 		case 3: // max
 			for _, val := range values {
-				operatorResult = int64(helpers.Max64(operatorResult, val))
+				operatorResult = helpers.Max(operatorResult, val)
 			}
 		case 5: // greater
 			if values[0] > values[1] {

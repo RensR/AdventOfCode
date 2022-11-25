@@ -2,14 +2,11 @@ package helpers
 
 import "strconv"
 
-func Abs(x int64) int64 {
-	if x < 0 {
-		return -x
-	}
-	return x
+type numbers interface {
+	int | int8 | int16 | int32 | int64 | float32 | float64
 }
 
-func AbsInt(x int) int {
+func Abs[T numbers](x T) T {
 	if x < 0 {
 		return -x
 	}
@@ -21,28 +18,14 @@ func FromBitString(bitString string) int64 {
 	return ox
 }
 
-func Min(a, b int) int {
+func Min[T numbers](a, b T) T {
 	if a < b {
 		return a
 	}
 	return b
 }
 
-func Min64(a, b int64) int64 {
-	if a < b {
-		return a
-	}
-	return b
-}
-
-func Max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-func Max64(a, b int64) int64 {
+func Max[T numbers](a, b T) T {
 	if a > b {
 		return a
 	}
