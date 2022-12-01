@@ -1,9 +1,14 @@
 package helpers
 
-import "strconv"
+import (
+	"sort"
+	"strconv"
+
+	"golang.org/x/exp/constraints"
+)
 
 type numbers interface {
-	int | int8 | int16 | int32 | int64 | float32 | float64
+	constraints.Integer | constraints.Float
 }
 
 func Abs[T numbers](x T) T {
@@ -18,16 +23,65 @@ func FromBitString(bitString string) int64 {
 	return ox
 }
 
-func Min[T numbers](a, b T) T {
+func Min[T constraints.Ordered](a, b T) T {
 	if a < b {
 		return a
 	}
 	return b
 }
 
-func Max[T numbers](a, b T) T {
+func Max[T constraints.Ordered](a, b T) T {
 	if a > b {
 		return a
 	}
 	return b
+}
+
+func Sum[T numbers](s []T) (sum T) {
+	for _, d := range s {
+		sum += d
+	}
+	return sum
+}
+
+func sortSlice[T constraints.Ordered](s []T) {
+	sort.Slice(s, func(i, j int) bool {
+		return s[i] < s[j]
+	})
+}
+
+func Map[T, U any](s []T, f func(T) U) []U {
+	r := make([]U, len(s))
+	for i, v := range s {
+		r[i] = f(v)
+	}
+	return r
+}
+
+func Filter[T any](s []T, f func(T) bool) []T {
+	var r []T
+	for _, v := range s {
+		if f(v) {
+			r = append(r, v)
+		}
+	}
+	return r
+}
+
+func Reduce[T, U any](s []T, init U, f func(U, T) U) U {
+	r := init
+	for _, v := range s {
+		r = f(r, v)
+	}
+	return r
+}
+
+func ReverseSlice[T any](s []T) {
+	first := 0
+	last := len(s) - 1
+	for first < last {
+		s[first], s[last] = s[last], s[first]
+		first++
+		last--
+	}
 }

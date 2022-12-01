@@ -2,7 +2,10 @@ module adventOfCode
 
 go 1.19
 
-require github.com/kindermoumoute/adventofcode v0.0.0-20201225075527-682ab4e0f685
+require (
+	github.com/kindermoumoute/adventofcode v0.0.0-20201225075527-682ab4e0f685
+	golang.org/x/exp v0.0.0-20221126150942-6ab00d035af9
+)
 
 require (
 	github.com/beefsack/go-astar v0.0.0-20171024231011-f324bbb0d6f7 // indirect

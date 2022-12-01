@@ -5,30 +5,22 @@ import (
 
 	"github.com/kindermoumoute/adventofcode/pkg"
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
+
+	"adventOfCode/helpers"
 )
 
 // --- Day 1: Calorie Counting ---
 func run(input string) (interface{}, interface{}) {
 	max, max1, max2 := 0, 0, 0
 
-	elves := strings.Split(input, "\n\n")
-
-	for _, elf := range elves {
-		food := pkg.ParseIntList(elf, "\n")
-		totalFood := 0
-		for _, f := range food {
-			totalFood += f
-		}
-
-		if totalFood >= max {
-			max2 = max1
-			max1 = max
-			max = totalFood
-		} else if totalFood >= max1 {
-			max2 = max1
-			max1 = totalFood
-		} else if totalFood >= max2 {
-			max2 = totalFood
+	for _, elf := range strings.Split(input, "\n\n") {
+		food := helpers.Sum(pkg.ParseIntList(elf, "\n"))
+		if food >= max {
+			max2, max1, max = max1, max, food
+		} else if food >= max1 {
+			max2, max1 = max1, food
+		} else if food >= max2 {
+			max2 = food
 		}
 	}
 
