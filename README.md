@@ -1,7 +1,10 @@
 # AdventOfCode
 
-Year 2021, 2019, 2018 are in Golang
+Year 2022, 2021, 2019, 2018 are in Golang
 Year 2020 is in C#
+
+## [2022](https://github.com/RensR/AdventOfCode/tree/master/AdventOfCode/Solutions/2022)
+Run `main` in `main.go` in the daily folder to get the answers to both `part 1` and `part 2` for each day. Input is tested agains the tests in `puzzle.go`.
 
 ## [2021](https://github.com/RensR/AdventOfCode/tree/master/AdventOfCode/Solutions/2021) 
 Run `main` in `main.go` in the daily folder to get the answers to both `part 1` and `part 2` for each day. Input is tested agains the tests in `puzzle.go`.
