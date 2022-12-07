@@ -82,6 +82,10 @@ func (stack *Stack[T]) Push(value T) {
 	stack.items = append(stack.items, value)
 }
 
+func (stack *Stack[T]) Len() int {
+	return len(stack.items)
+}
+
 func (stack *Stack[T]) Pop() (value T) {
 	n := len(stack.items)
 	if n <= 0 {

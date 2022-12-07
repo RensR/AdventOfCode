@@ -10,7 +10,6 @@ func run(input string) (interface{}, interface{}) {
 }
 
 func calculate(input string, depth int) int {
-	// Solution B
 	dup := false
 	for i := depth; i < len(input); i++ {
 		dup = false
