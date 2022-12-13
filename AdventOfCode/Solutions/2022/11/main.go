@@ -34,9 +34,6 @@ func run(input string) (interface{}, interface{}) {
 func ThrowStuff(monkeys []Monkey, rounds int, div func(int) int) int {
 	for r := 0; r < rounds; r++ {
 		for i, _ := range monkeys {
-			if monkeys[i].Items.IsEmpty() {
-				continue
-			}
 			for !monkeys[i].Items.IsEmpty() {
 				newItem := div(monkeys[i].Op(*monkeys[i].Items.Pop()))
 				nextMonk := monkeys[i].Test(newItem)
@@ -46,19 +43,13 @@ func ThrowStuff(monkeys []Monkey, rounds int, div func(int) int) int {
 		}
 	}
 
-	high, higher := 0, 0
+	throws := helpers.Map(monkeys, func(m Monkey) int {
+		return m.Throws
+	})
 
-	for _, monkey := range monkeys {
-		if monkey.Throws > high {
-			if monkey.Throws >= higher {
-				high, higher = higher, monkey.Throws
-			} else {
-				high = monkey.Throws
-			}
-		}
-	}
+	helpers.ReverseSort(throws)
 
-	return high * higher
+	return throws[0] * throws[1]
 }
 
 func MakeMonk(input string) (monk Monkey, div int) {

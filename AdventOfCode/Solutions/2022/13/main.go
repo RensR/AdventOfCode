@@ -6,44 +6,33 @@ import (
 	"strings"
 
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
+	"golang.org/x/exp/slices"
 )
 
 // --- Day 13: Distress Signal ---
 func run(input string) (interface{}, interface{}) {
 	indexesOfRightOrder := 0
+	all := [][]interface{}{jsonParse("[[2]]"), jsonParse("[[6]]")}
 
-	var all [][]interface{}
 	for i, line := range strings.Split(input, "\n\n") {
 		leftRight := strings.Split(line, "\n")
-		left := jsonParse(leftRight[0])
-		right := jsonParse(leftRight[1])
+		left, right := jsonParse(leftRight[0]), jsonParse(leftRight[1])
 		all = append(all, left, right)
 
 		if comp(left, right) == 1 {
 			indexesOfRightOrder += i + 1
 		}
 	}
-	indexer1, indexer2 := jsonParse("[[2]]"), jsonParse("[[6]]")
-	all = append(all, indexer1, indexer2)
 
-	// Bubble sort
-	for {
-		swapped := false
-		for i := 1; i < len(all); i++ {
-			if comp(all[i-1], all[i]) == -1 {
-				all[i-1], all[i] = all[i], all[i-1]
-				swapped = true
-			}
-		}
-		if !swapped {
-			break
-		}
-	}
+	slices.SortFunc(all, func(l, r []interface{}) bool {
+		return comp(l, r) == 1
+	})
+
 	decoderIndexes := 1
 	for i, outerList := range all {
-		if len(outerList) == 1 && reflect.TypeOf(outerList[0]).String() == list {
+		if len(outerList) == 1 && isList(outerList[0]) {
 			innerList := outerList[0].([]interface{})
-			if len(innerList) == 1 && reflect.TypeOf(innerList[0]).String() == number {
+			if len(innerList) == 1 && isNumber(innerList[0]) {
 				number := innerList[0].(float64)
 				if number == 6 || number == 2 {
 					decoderIndexes *= i + 1
@@ -55,14 +44,17 @@ func run(input string) (interface{}, interface{}) {
 	return indexesOfRightOrder, decoderIndexes
 }
 
-const (
-	number = "float64"
-	list   = "[]interface {}"
-)
+func isNumber(i interface{}) bool {
+	return reflect.TypeOf(i).String() == "float64"
+}
+
+func isList(i interface{}) bool {
+	return reflect.TypeOf(i).String() == "[]interface {}"
+}
 
 func comp(left, right interface{}) int {
 	// number & number case
-	if reflect.TypeOf(left).String() == number && reflect.TypeOf(right).String() == number {
+	if isNumber(left) && isNumber(right) {
 		leftNumber, rightNumber := left.(float64), right.(float64)
 		if leftNumber < rightNumber {
 			return 1
@@ -73,7 +65,7 @@ func comp(left, right interface{}) int {
 		return -1
 	}
 	// list and list case
-	if reflect.TypeOf(left).String() == list && reflect.TypeOf(right).String() == list {
+	if isList(left) && isList(right) {
 		leftList, rightList := left.([]interface{}), right.([]interface{})
 
 		i := 0
@@ -95,7 +87,7 @@ func comp(left, right interface{}) int {
 
 		return 0
 	}
-	if reflect.TypeOf(left).String() == list {
+	if isList(left) {
 		return comp(left, []interface{}{right})
 	}
 	return comp([]interface{}{left}, right)

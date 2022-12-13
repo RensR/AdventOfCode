@@ -1,10 +1,10 @@
 package helpers
 
 import (
-	"sort"
 	"strconv"
 
 	"golang.org/x/exp/constraints"
+	"golang.org/x/exp/slices"
 )
 
 type numbers interface {
@@ -54,12 +54,6 @@ func Sum[T numbers](s []T) (sum T) {
 	return sum
 }
 
-func sortSlice[T constraints.Ordered](s []T) {
-	sort.Slice(s, func(i, j int) bool {
-		return s[i] < s[j]
-	})
-}
-
 func Map[T, U any](s []T, f func(T) U) []U {
 	r := make([]U, len(s))
 	for i, v := range s {
@@ -84,6 +78,12 @@ func Reduce[T, U any](s []T, init U, f func(U, T) U) U {
 		r = f(r, v)
 	}
 	return r
+}
+
+func ReverseSort[T constraints.Ordered](s []T) {
+	slices.SortFunc(s, func(a, b T) bool {
+		return a > b
+	})
 }
 
 func ReverseSlice[T any](s []T) {

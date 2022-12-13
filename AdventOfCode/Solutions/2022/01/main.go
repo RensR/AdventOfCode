@@ -11,20 +11,14 @@ import (
 
 // --- Day 1: Calorie Counting ---
 func run(input string) (interface{}, interface{}) {
-	max, max1, max2 := 0, 0, 0
-
+	var allFood []int
 	for _, elf := range strings.Split(input, "\n\n") {
-		food := helpers.Sum(pkg.ParseIntList(elf, "\n"))
-		if food >= max {
-			max2, max1, max = max1, max, food
-		} else if food >= max1 {
-			max2, max1 = max1, food
-		} else if food >= max2 {
-			max2 = food
-		}
+		allFood = append(allFood, helpers.Sum(pkg.ParseIntList(elf, "\n")))
 	}
 
-	return max, max + max1 + max2
+	helpers.ReverseSort(allFood)
+
+	return allFood[0], allFood[0] + allFood[1] + allFood[2]
 }
 
 func main() {
