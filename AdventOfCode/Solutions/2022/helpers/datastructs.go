@@ -95,3 +95,34 @@ func (stack *Stack[T]) Pop() (value T) {
 	stack.items = stack.items[:n-1]
 	return
 }
+
+// Queue Generic queue
+type Queue[T comparable] struct {
+	Items []T
+}
+
+func (s *Queue[T]) Push(t T) {
+	s.Items = append(s.Items, t)
+}
+
+func (s *Queue[T]) Pop() *T {
+	item := s.Items[0]
+	s.Items = s.Items[1:len(s.Items)]
+	return &item
+}
+
+// NewQ Creates New Queue
+func (s *Queue[T]) NewQ() *Queue[T] {
+	s.Items = []T{}
+	return s
+}
+
+// IsEmpty returns true if the queue is empty
+func (s *Queue[T]) IsEmpty() bool {
+	return len(s.Items) == 0
+}
+
+// Size returns the number of Nodes in the queue
+func (s *Queue[T]) Size() int {
+	return len(s.Items)
+}
