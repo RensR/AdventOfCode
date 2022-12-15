@@ -11,7 +11,7 @@ import (
 	"adventOfCode/helpers"
 )
 
-// --- Day 13: Distress Signal ---
+// --- Day 14: Regolith Reservoir ---
 func run(input string) (interface{}, interface{}) {
 	maxY := 0
 	cave := make(map[image.Point]int)
