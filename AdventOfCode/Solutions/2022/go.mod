@@ -3,6 +3,7 @@ module adventOfCode
 go 1.19
 
 require (
+	github.com/RyanCarrier/dijkstra v1.1.0
 	github.com/kindermoumoute/adventofcode v0.0.0-20201225075527-682ab4e0f685
 	golang.org/x/exp v0.0.0-20221126150942-6ab00d035af9
 )
