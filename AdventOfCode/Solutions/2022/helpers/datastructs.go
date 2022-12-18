@@ -97,7 +97,7 @@ func (stack *Stack[T]) Pop() (value T) {
 }
 
 // Queue Generic queue
-type Queue[T comparable] struct {
+type Queue[T any] struct {
 	Items []T
 }
 
