@@ -23,7 +23,7 @@ type Blueprint struct {
 	MaxObsidianCost int
 }
 
-// --- Day 18: Boiling Boulders ---
+// --- Day 19: Not Enough Minerals ---
 func run(input string) (interface{}, interface{}) {
 	var blueprints []Blueprint
 
