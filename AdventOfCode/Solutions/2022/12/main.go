@@ -7,7 +7,8 @@ import (
 
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 
-	"adventOfCode/helpers"
+	"adventOfCode/helpers/datastructures"
+	"adventOfCode/helpers/grid"
 )
 
 // --- Day 12: Hill Climbing Algorithm ---
@@ -16,7 +17,7 @@ func run(input string) (interface{}, interface{}) {
 	for y, line := range strings.Split(input, "\n") {
 		for x, char := range line {
 			if char == 'S' || char == 'a' {
-				result := walk(input, helpers.Vertex{X: x, Y: y, Distance: 0})
+				result := walk(input, datastructures.Vertex{X: x, Y: y, Distance: 0})
 				if result < resultB {
 					resultB = result
 				}
@@ -30,8 +31,8 @@ func run(input string) (interface{}, interface{}) {
 	return resultA, resultB
 }
 
-func walk(input string, start helpers.Vertex) int {
-	var q = helpers.NodeQueue{}
+func walk(input string, start datastructures.Vertex) int {
+	var q = datastructures.NodeQueue{}
 	q.NewQ()
 
 	hills := make(map[image.Point]int32)
@@ -49,7 +50,7 @@ func walk(input string, start helpers.Vertex) int {
 		if currentHeight == 'E' {
 			return current.Distance
 		}
-		for _, direction := range helpers.UpDownLeftRight {
+		for _, direction := range grid.UpDownLeftRight {
 			next := image.Point{
 				X: current.X + direction.X,
 				Y: current.Y + direction.Y,
@@ -60,7 +61,7 @@ func walk(input string, start helpers.Vertex) int {
 						continue
 					}
 					if _, ok := visited[next]; !ok {
-						q.Enqueue(helpers.Vertex{
+						q.Enqueue(datastructures.Vertex{
 							X:        next.X,
 							Y:        next.Y,
 							Distance: current.Distance + 1,

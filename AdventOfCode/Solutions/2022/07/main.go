@@ -6,7 +6,7 @@ import (
 	"github.com/kindermoumoute/adventofcode/pkg"
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 
-	"adventOfCode/helpers"
+	"adventOfCode/helpers/datastructures"
 )
 
 // --- Day 7: No Space Left On Device ---
@@ -52,7 +52,7 @@ func run(input string) (interface{}, interface{}) {
 		}
 	}
 
-	var todo helpers.Stack[*Folder]
+	var todo datastructures.Stack[*Folder]
 
 	todo.Push(&root)
 	needed := 30000000 - (70000000 - root.size)

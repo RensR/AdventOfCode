@@ -10,7 +10,7 @@ import (
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 	"golang.org/x/exp/slices"
 
-	"adventOfCode/helpers"
+	math2 "adventOfCode/helpers/math"
 )
 
 // --- Day 15: Beacon Exclusion Zone ---
@@ -107,7 +107,7 @@ func echooooo(beacons, sensors []image.Point) map[int][]Range {
 		// get distance to the closest beacon
 		distance := math.MaxInt
 		for _, beacon := range beacons {
-			currentDistance := helpers.Abs(sensor.X-beacon.X) + helpers.Abs(sensor.Y-beacon.Y)
+			currentDistance := math2.Abs(sensor.X-beacon.X) + math2.Abs(sensor.Y-beacon.Y)
 			if currentDistance < distance {
 				distance = currentDistance
 			}

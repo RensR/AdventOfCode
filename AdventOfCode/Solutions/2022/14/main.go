@@ -8,7 +8,7 @@ import (
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 	"golang.org/x/exp/maps"
 
-	"adventOfCode/helpers"
+	"adventOfCode/helpers/math"
 )
 
 // --- Day 14: Regolith Reservoir ---
@@ -18,12 +18,12 @@ func run(input string) (interface{}, interface{}) {
 
 	for _, line := range strings.Split(input, "\n") {
 		coords := strings.Split(line, " -> ")
-		prevXY := helpers.Map(strings.Split(coords[0], ","), pkg.MustAtoi)
+		prevXY := math.Map(strings.Split(coords[0], ","), pkg.MustAtoi)
 		if prevXY[1] > maxY {
 			maxY = prevXY[1]
 		}
 		for i := 1; i < len(coords); i++ {
-			currentXY := helpers.Map(strings.Split(coords[i], ","), pkg.MustAtoi)
+			currentXY := math.Map(strings.Split(coords[i], ","), pkg.MustAtoi)
 			if currentXY[1] > maxY {
 				maxY = currentXY[1]
 			}

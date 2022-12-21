@@ -6,7 +6,7 @@ import (
 	"github.com/kindermoumoute/adventofcode/pkg"
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 
-	"adventOfCode/helpers"
+	"adventOfCode/helpers/math"
 )
 
 // --- Day 4: Camp Cleanup ---
@@ -15,8 +15,8 @@ func run(input string) (interface{}, interface{}) {
 
 	for _, line := range strings.Split(input, "\n") {
 		splits := strings.Split(line, ",")
-		left := helpers.Map(strings.Split(splits[0], "-"), pkg.MustAtoi)
-		right := helpers.Map(strings.Split(splits[1], "-"), pkg.MustAtoi)
+		left := math.Map(strings.Split(splits[0], "-"), pkg.MustAtoi)
+		right := math.Map(strings.Split(splits[1], "-"), pkg.MustAtoi)
 
 		if left[0] > right[0] {
 			left, right = right, left

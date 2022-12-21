@@ -6,11 +6,12 @@ import (
 	"github.com/kindermoumoute/adventofcode/pkg"
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 
-	"adventOfCode/helpers"
+	"adventOfCode/helpers/datastructures"
+	"adventOfCode/helpers/math"
 )
 
 type Monkey struct {
-	Items  helpers.Queue[int]
+	Items  datastructures.Queue[int]
 	Op     func(int) int
 	Test   func(int) int
 	Throws int
@@ -43,11 +44,11 @@ func ThrowStuff(monkeys []Monkey, rounds int, div func(int) int) int {
 		}
 	}
 
-	throws := helpers.Map(monkeys, func(m Monkey) int {
+	throws := math.Map(monkeys, func(m Monkey) int {
 		return m.Throws
 	})
 
-	helpers.ReverseSort(throws)
+	math.ReverseSort(throws)
 
 	return throws[0] * throws[1]
 }
@@ -55,8 +56,8 @@ func ThrowStuff(monkeys []Monkey, rounds int, div func(int) int) int {
 func MakeMonk(input string) (monk Monkey, div int) {
 	lines := strings.Split(input, "\n")
 	op := strings.Split(lines[2][23:], " ")
-	queue := helpers.Queue[int]{Items: []int{}}
-	for _, item := range helpers.Map(strings.Split(lines[1][18:], ", "), pkg.MustAtoi) {
+	queue := datastructures.Queue[int]{Items: []int{}}
+	for _, item := range math.Map(strings.Split(lines[1][18:], ", "), pkg.MustAtoi) {
 		queue.Push(item)
 	}
 

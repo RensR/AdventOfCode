@@ -6,13 +6,15 @@ import (
 
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 
-	"adventOfCode/helpers"
+	"adventOfCode/helpers/datastructures"
+	"adventOfCode/helpers/grid"
+	"adventOfCode/helpers/math"
 )
 
 // --- Day 18: Boiling Boulders ---
 func run(input string) (interface{}, interface{}) {
-	clouds := make(map[helpers.XYZ]struct{})
-	steam := make(map[helpers.XYZ]struct{})
+	clouds := make(map[grid.XYZ]struct{})
+	steam := make(map[grid.XYZ]struct{})
 
 	maxX, maxY, maxZ, min := 0, 0, 0, -1
 
@@ -22,19 +24,19 @@ func run(input string) (interface{}, interface{}) {
 		if err != nil {
 			panic("")
 		}
-		maxX = helpers.Max(maxX, x)
-		maxY = helpers.Max(maxY, y)
-		maxZ = helpers.Max(maxZ, z)
+		maxX = math.Max(maxX, x)
+		maxY = math.Max(maxY, y)
+		maxZ = math.Max(maxZ, z)
 
-		clouds[helpers.XYZ{X: x, Y: y, Z: z}] = struct{}{}
+		clouds[grid.XYZ{X: x, Y: y, Z: z}] = struct{}{}
 	}
 
-	queue := helpers.Queue[helpers.XYZ]{}
-	queue.Push(helpers.XYZ{})
+	queue := datastructures.Queue[grid.XYZ]{}
+	queue.Push(grid.XYZ{})
 
 	for !queue.IsEmpty() {
 		current := *queue.Pop()
-		for _, direction := range helpers.ZYXSides {
+		for _, direction := range grid.ZYXSides {
 			side := current.Add(direction)
 			if side.X < min || side.Y < min || side.Z < min ||
 				side.X > maxX+1 || side.Y > maxY+1 || side.Z > maxZ+1 {
@@ -52,7 +54,7 @@ func run(input string) (interface{}, interface{}) {
 	sides, sidesB := 0, 0
 	for particle, _ := range clouds {
 		sidesClear, sidesBClear := 6, 6
-		for _, direction := range helpers.ZYXSides {
+		for _, direction := range grid.ZYXSides {
 			side := particle.Add(direction)
 			if _, ok := clouds[side]; ok {
 				sidesClear--

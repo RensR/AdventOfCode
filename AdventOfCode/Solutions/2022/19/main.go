@@ -6,7 +6,7 @@ import (
 
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 
-	"adventOfCode/helpers"
+	"adventOfCode/helpers/math"
 )
 
 type Blueprint struct {
@@ -35,13 +35,13 @@ func run(input string) (interface{}, interface{}) {
 		if err != nil {
 			panic("")
 		}
-		blueprint.MaxOreCost = helpers.Max(helpers.Max(helpers.Max(blueprint.OreRobotCost, blueprint.ClayRobotCost), blueprint.ObsidianRobotOreCost), blueprint.GeodeRobotOreCost)
+		blueprint.MaxOreCost = math.Max(math.Max(math.Max(blueprint.OreRobotCost, blueprint.ClayRobotCost), blueprint.ObsidianRobotOreCost), blueprint.GeodeRobotOreCost)
 		blueprint.MaxClayCost = blueprint.ObsidianRobotClayCost
 		blueprint.MaxObsidianCost = blueprint.GeodeRobotObsidianCost
 		blueprints = append(blueprints, blueprint)
 	}
 
-	maxGeodes := helpers.Map(blueprints, func(blueprint Blueprint) int {
+	maxGeodes := math.Map(blueprints, func(blueprint Blueprint) int {
 		cache := make(map[Factory]int)
 		return RunSim(Factory{
 			Robots:    Robots{OreRobot: 1},
@@ -51,7 +51,7 @@ func run(input string) (interface{}, interface{}) {
 	})
 
 	if len(blueprints) == 2 {
-		maxGeodesB := helpers.Map(blueprints[:2], func(blueprint Blueprint) int {
+		maxGeodesB := math.Map(blueprints[:2], func(blueprint Blueprint) int {
 			cache := make(map[Factory]int)
 			return RunSim(Factory{
 				Robots:    Robots{OreRobot: 1},
@@ -60,10 +60,10 @@ func run(input string) (interface{}, interface{}) {
 			}, blueprint, cache) * blueprint.Id
 		})
 
-		return helpers.Sum(maxGeodes), maxGeodesB[0] * maxGeodesB[1]
+		return math.Sum(maxGeodes), maxGeodesB[0] * maxGeodesB[1]
 	}
 
-	maxGeodesB := helpers.Map(blueprints[:3], func(blueprint Blueprint) int {
+	maxGeodesB := math.Map(blueprints[:3], func(blueprint Blueprint) int {
 		cache := make(map[Factory]int)
 		return RunSim(Factory{
 			Robots:    Robots{OreRobot: 1},
@@ -72,7 +72,7 @@ func run(input string) (interface{}, interface{}) {
 		}, blueprint, cache) * blueprint.Id
 	})
 
-	return helpers.Sum(maxGeodes), maxGeodesB[0] * maxGeodesB[1] * maxGeodesB[2]
+	return math.Sum(maxGeodes), maxGeodesB[0] * maxGeodesB[1] * maxGeodesB[2]
 }
 
 type Factory struct {
@@ -120,7 +120,7 @@ func RunSim(factory Factory, bluePrint Blueprint, cache map[Factory]int) int {
 		newFactory.Robots.OreRobot++
 
 		AddResources(&newFactory.Resources, factory.Robots)
-		bestFactoryScore = helpers.Max(bestFactoryScore, TestNewFactory(newFactory, bluePrint, cache))
+		bestFactoryScore = math.Max(bestFactoryScore, TestNewFactory(newFactory, bluePrint, cache))
 	}
 	if factory.Robots.ClayRobot < bluePrint.MaxClayCost && factory.Resources.Ore >= bluePrint.ClayRobotCost {
 		newFactory := factory
@@ -128,7 +128,7 @@ func RunSim(factory Factory, bluePrint Blueprint, cache map[Factory]int) int {
 		newFactory.Robots.ClayRobot++
 
 		AddResources(&newFactory.Resources, factory.Robots)
-		bestFactoryScore = helpers.Max(bestFactoryScore, TestNewFactory(newFactory, bluePrint, cache))
+		bestFactoryScore = math.Max(bestFactoryScore, TestNewFactory(newFactory, bluePrint, cache))
 	}
 	if factory.Robots.ObsidianRobot < bluePrint.MaxObsidianCost && factory.Resources.Ore >= bluePrint.ObsidianRobotOreCost && factory.Resources.Clay >= bluePrint.ObsidianRobotClayCost {
 		newFactory := factory
@@ -137,7 +137,7 @@ func RunSim(factory Factory, bluePrint Blueprint, cache map[Factory]int) int {
 		newFactory.Robots.ObsidianRobot++
 
 		AddResources(&newFactory.Resources, factory.Robots)
-		bestFactoryScore = helpers.Max(bestFactoryScore, TestNewFactory(newFactory, bluePrint, cache))
+		bestFactoryScore = math.Max(bestFactoryScore, TestNewFactory(newFactory, bluePrint, cache))
 	}
 	if factory.Resources.Ore >= bluePrint.GeodeRobotOreCost && factory.Resources.Obsidian >= bluePrint.GeodeRobotObsidianCost {
 		newFactory := factory
@@ -146,12 +146,12 @@ func RunSim(factory Factory, bluePrint Blueprint, cache map[Factory]int) int {
 		newFactory.Robots.GeodeRobot++
 
 		AddResources(&newFactory.Resources, factory.Robots)
-		bestFactoryScore = helpers.Max(bestFactoryScore, TestNewFactory(newFactory, bluePrint, cache))
+		bestFactoryScore = math.Max(bestFactoryScore, TestNewFactory(newFactory, bluePrint, cache))
 	}
 
 	newFactory := factory
 	AddResources(&newFactory.Resources, factory.Robots)
-	bestFactoryScore = helpers.Max(bestFactoryScore, TestNewFactory(newFactory, bluePrint, cache))
+	bestFactoryScore = math.Max(bestFactoryScore, TestNewFactory(newFactory, bluePrint, cache))
 
 	if factory.TimeLeft == 23 {
 		println(fmt.Sprintf("%+v", factory))

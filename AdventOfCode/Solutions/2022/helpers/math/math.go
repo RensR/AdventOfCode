@@ -1,4 +1,4 @@
-package helpers
+package math
 
 import (
 	"strconv"
@@ -35,16 +35,6 @@ func Max[T constraints.Ordered](a, b T) T {
 		return a
 	}
 	return b
-}
-
-func MapMax[T constraints.Ordered, K comparable](m map[K]T) T {
-	max := T(0)
-	for _, amount := range m {
-		if amount > max {
-			max = amount
-		}
-	}
-	return max
 }
 
 func Sum[T numbers](s []T) (sum T) {

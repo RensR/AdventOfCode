@@ -6,17 +6,17 @@ import (
 	"github.com/kindermoumoute/adventofcode/pkg"
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 
-	"adventOfCode/helpers"
+	"adventOfCode/helpers/math"
 )
 
 // --- Day 1: Calorie Counting ---
 func run(input string) (interface{}, interface{}) {
 	var allFood []int
 	for _, elf := range strings.Split(input, "\n\n") {
-		allFood = append(allFood, helpers.Sum(pkg.ParseIntList(elf, "\n")))
+		allFood = append(allFood, math.Sum(pkg.ParseIntList(elf, "\n")))
 	}
 
-	helpers.ReverseSort(allFood)
+	math.ReverseSort(allFood)
 
 	return allFood[0], allFood[0] + allFood[1] + allFood[2]
 }

@@ -5,7 +5,7 @@ import (
 
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 
-	"adventOfCode/helpers"
+	strings2 "adventOfCode/helpers/strings"
 )
 
 // --- Day 3: Rucksack Reorganization ---
@@ -14,7 +14,7 @@ func run(input string) (interface{}, interface{}) {
 
 	lines := strings.Split(input, "\n")
 	for i, line := range lines {
-		left, right := helpers.SortString(line[len(line)/2:]), helpers.SortString(line[:len(line)/2])
+		left, right := strings2.SortString(line[len(line)/2:]), strings2.SortString(line[:len(line)/2])
 
 		l, r := 0, 0
 		for left[l] != right[r] {
@@ -27,7 +27,7 @@ func run(input string) (interface{}, interface{}) {
 		priority += getRuneValue(left[l])
 
 		if (i+1)%3 == 0 {
-			one, two, three := helpers.SortString(lines[i-2]), helpers.SortString(lines[i-1]), helpers.SortString(lines[i])
+			one, two, three := strings2.SortString(lines[i-2]), strings2.SortString(lines[i-1]), strings2.SortString(lines[i])
 			o, tw, th := 0, 0, 0
 			for one[o] != two[tw] || one[o] != three[th] {
 				if one[o] < two[tw] && one[o] < three[th] {

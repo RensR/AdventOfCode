@@ -6,13 +6,14 @@ import (
 
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 
-	"adventOfCode/helpers"
+	"adventOfCode/helpers/grid"
+	_map "adventOfCode/helpers/map"
 )
 
 // --- Day 8: Treetop Tree House ---
 func run(input string) (interface{}, interface{}) {
 	treeLines := strings.Split(input, "\n")
-	treeMap := helpers.ParseIntMap(input)
+	treeMap := grid.ParseIntMap(input)
 	treeVisibilityMap := make(map[image.Point]int)
 
 	height, width := len(treeLines), len(treeLines[0])
@@ -55,7 +56,7 @@ func run(input string) (interface{}, interface{}) {
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
 			scenicScore := 1
-			for _, direction := range helpers.UpDownLeftRight {
+			for _, direction := range grid.UpDownLeftRight {
 				for i := 1; ; i++ {
 					xs, ys := x+direction.X*i, y+direction.Y*i
 					if xs < 0 || xs >= width || ys < 0 || ys >= height {
@@ -72,7 +73,7 @@ func run(input string) (interface{}, interface{}) {
 		}
 	}
 
-	return len(treeVisibilityMap), helpers.MapMax(treeScenicMap)
+	return len(treeVisibilityMap), _map.MapMaxValue(treeScenicMap)
 }
 
 func main() {

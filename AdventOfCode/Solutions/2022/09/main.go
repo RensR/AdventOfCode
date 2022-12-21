@@ -8,7 +8,7 @@ import (
 	"github.com/kindermoumoute/adventofcode/pkg"
 	"github.com/kindermoumoute/adventofcode/pkg/execute"
 
-	"adventOfCode/helpers"
+	"adventOfCode/helpers/math"
 )
 
 // --- Day 9: Rope Bridge ---
@@ -51,15 +51,15 @@ func updateRope(knots []image.Point, visited map[image.Point]int) {
 		deltaX := knots[i-1].X - knots[i].X
 		deltaY := knots[i-1].Y - knots[i].Y
 
-		if helpers.Abs(deltaX) >= 2 {
-			knots[i].X += (deltaX) / helpers.Abs(deltaX)
+		if math.Abs(deltaX) >= 2 {
+			knots[i].X += (deltaX) / math.Abs(deltaX)
 			if deltaY != 0 {
-				knots[i].Y += (deltaY) / helpers.Abs(deltaY)
+				knots[i].Y += (deltaY) / math.Abs(deltaY)
 			}
-		} else if helpers.Abs(deltaY) >= 2 {
-			knots[i].Y += (deltaY) / helpers.Abs(deltaY)
+		} else if math.Abs(deltaY) >= 2 {
+			knots[i].Y += (deltaY) / math.Abs(deltaY)
 			if deltaX != 0 {
-				knots[i].X += (deltaX) / helpers.Abs(deltaX)
+				knots[i].X += (deltaX) / math.Abs(deltaX)
 			}
 		}
 	}
