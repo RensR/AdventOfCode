@@ -13,7 +13,7 @@ pub fn part1(input: &str) -> u32 {
 #[aoc(day1, part2)]
 pub fn part2(input: &str) -> u32 {
     return input.lines()
-        .map(| c|  parse_string_digits(c))
+        .map(|c| parse_string_digits(c))
         .sum();
 }
 
