@@ -2,7 +2,8 @@ use std::collections::HashMap;
 
 #[aoc(day1, part1, Improved)]
 pub fn part1(input: &str) -> u32 {
-    return input.lines()
+    return input
+        .lines()
         // Parse input into a vector of vectors of digits
         .map(|c| c.chars().filter_map(|a| a.to_digit(10)).collect::<Vec<_>>())
         // Reduce each vector of digits into a single number
@@ -12,9 +13,7 @@ pub fn part1(input: &str) -> u32 {
 
 #[aoc(day1, part2)]
 pub fn part2(input: &str) -> u32 {
-    return input.lines()
-        .map(|c| parse_string_digits(c))
-        .sum();
+    return input.lines().map(|c| parse_string_digits(c)).sum();
 }
 
 fn parse_string_digits(t_num: &str) -> u32 {
@@ -29,7 +28,6 @@ fn parse_string_digits(t_num: &str) -> u32 {
     number_lookup.insert("eight".to_string(), 8);
     number_lookup.insert("nine".to_string(), 9);
 
-
     let chars = t_num.chars().collect::<Vec<_>>();
     let mut result: Vec<u32> = Vec::new();
 
@@ -40,11 +38,11 @@ fn parse_string_digits(t_num: &str) -> u32 {
         } else {
             for (key, value) in number_lookup.iter() {
                 if i + key.len() > chars.len() {
-                    continue
+                    continue;
                 }
-                if chars[i..i+key.len()].iter().collect::<String>() == *key {
+                if chars[i..i + key.len()].iter().collect::<String>() == *key {
                     result.push(*value);
-                    break
+                    break;
                 }
             }
         }
@@ -55,7 +53,7 @@ fn parse_string_digits(t_num: &str) -> u32 {
 
 #[cfg(test)]
 mod tests {
-    use super::{ part1, part2};
+    use super::{part1, part2};
 
     #[test]
     fn basics() {

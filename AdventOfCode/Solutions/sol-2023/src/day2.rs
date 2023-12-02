@@ -8,7 +8,7 @@ pub struct Game {
 pub struct Round {
     blue: u32,
     red: u32,
-    green: u32
+    green: u32,
 }
 
 #[aoc_generator(day2)]
@@ -18,37 +18,49 @@ pub fn input_generator(input: &str) -> Vec<Game> {
         .map(|l| {
             let mut game_info = l.trim().split(':');
             let mut game = Game {
-                id: game_info.next().unwrap().strip_prefix("Game ").unwrap().parse().unwrap(),
+                id: game_info
+                    .next()
+                    .unwrap()
+                    .strip_prefix("Game ")
+                    .unwrap()
+                    .parse()
+                    .unwrap(),
                 games: Vec::new(),
             };
-            game.games = game_info.next().unwrap().split(';').map(|r| {
-                let mut cur_round = Round {
-                    blue: 0,
-                    red: 0,
-                    green: 0,
-                };
+            game.games = game_info
+                .next()
+                .unwrap()
+                .split(';')
+                .map(|r| {
+                    let mut cur_round = Round {
+                        blue: 0,
+                        red: 0,
+                        green: 0,
+                    };
 
-                for rgb_part in r.split(',').map(|i| i.trim()) {
-                    let part = rgb_part.split(' ').collect::<Vec<_>>();
-                    match part[1] {
-                        "blue" => {
-                            cur_round.blue = part[0].parse().unwrap();
-                        },
-                        "red" => {
-                            cur_round.red = part[0].parse().unwrap();
-                        },
-                        "green" => {
-                            cur_round.green = part[0].parse().unwrap();
-                        },
-                        _ => {
-                            panic!("Invalid color");
+                    for rgb_part in r.split(',').map(|i| i.trim()) {
+                        let part = rgb_part.split(' ').collect::<Vec<_>>();
+                        match part[1] {
+                            "blue" => {
+                                cur_round.blue = part[0].parse().unwrap();
+                            }
+                            "red" => {
+                                cur_round.red = part[0].parse().unwrap();
+                            }
+                            "green" => {
+                                cur_round.green = part[0].parse().unwrap();
+                            }
+                            _ => {
+                                panic!("Invalid color");
+                            }
                         }
                     }
-                }
-                return cur_round;
-            }).collect();
+                    return cur_round;
+                })
+                .collect();
             return game;
-        }).collect()
+        })
+        .collect()
 }
 
 // Determine which games would have been possible if the bag had been loaded with only
@@ -59,7 +71,8 @@ pub fn part1(input: &Vec<Game>) -> u32 {
     let max_green = 13;
     let max_blue = 14;
 
-    return input.iter()
+    return input
+        .iter()
         .filter(|gm| {
             for round in gm.games.iter() {
                 if round.red > max_red || round.blue > max_blue || round.green > max_green {
@@ -68,15 +81,16 @@ pub fn part1(input: &Vec<Game>) -> u32 {
             }
             return true;
         })
-        .map(|g| { g.id })
+        .map(|g| g.id)
         .sum::<u32>();
 }
 
 #[aoc(day2, part2)]
 pub fn part2(games: &Vec<Game>) -> u32 {
-    return games.iter()
+    return games
+        .iter()
         .map(|round| {
-            let (mut max_red, mut max_green, mut max_blue) = (0, 0,0);
+            let (mut max_red, mut max_green, mut max_blue) = (0, 0, 0);
             for round in round.games.iter() {
                 if round.red > max_red {
                     max_red = round.red;
@@ -89,12 +103,13 @@ pub fn part2(games: &Vec<Game>) -> u32 {
                 }
             }
             return max_red * max_blue * max_green;
-        }).sum::<u32>();
+        })
+        .sum::<u32>();
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{ part1, input_generator, part2};
+    use super::{input_generator, part1, part2};
 
     #[test]
     fn basics() {
@@ -103,7 +118,8 @@ mod tests {
 Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
 Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
 Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
-Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green");
+Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green",
+        );
         assert_eq!(part1(input), 8);
         assert_eq!(part2(input), 2286);
     }
