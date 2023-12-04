@@ -61,8 +61,6 @@ pub fn part1(input_s: &str) -> u32 {
     return total_num;
 }
 
-
-
 #[aoc(day3, part2)]
 pub fn part2(input_s: &str) -> u32 {
     let input = input_s.lines().map(|l| l.as_bytes()).collect::<Vec<_>>();
