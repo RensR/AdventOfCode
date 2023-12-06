@@ -108,7 +108,7 @@ fn solve((seed_start, range_length): &(u32, u32), lookup: &Vec<Vec<(u32, u32, u3
 mod tests {
     use super::{input_generator, part1, part2};
 
-   // #[test]
+    #[test]
     fn basics() {
         let input = "seeds: 79 14 55 13
 
