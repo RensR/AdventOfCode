@@ -6,11 +6,13 @@ pub fn input_generator(input: &str) -> Vec<(u64, u64)> {
         .unwrap()
         .split_whitespace()
         .map(|n| n.trim().parse::<u64>().unwrap())
-        .zip(sections[1]
-            .strip_prefix("Distance:")
-            .unwrap()
-            .split_whitespace()
-            .map(|n| n.trim().parse::<u64>().unwrap()))
+        .zip(
+            sections[1]
+                .strip_prefix("Distance:")
+                .unwrap()
+                .split_whitespace()
+                .map(|n| n.trim().parse::<u64>().unwrap()),
+        )
         .collect::<Vec<_>>();
 }
 
@@ -24,20 +26,14 @@ pub fn part1(game: &Vec<(u64, u64)>) -> u64 {
 
 #[aoc(day6, part2)]
 pub fn part2(_game: &Vec<(u64, u64)>) -> u64 {
-    let time :u64 = 59707878;
-    let distance :u64= 430121812131276;
+    let time: u64 = 59707878;
+    let distance: u64 = 430121812131276;
 
     return get_winning_options(time, distance);
 }
 
 fn get_winning_options(time: u64, distance: u64) -> u64 {
-    let mut total_winners = 0;
-    for i in 0..= time {
-        if i * (time - i) > distance {
-            total_winners += 1;
-        }
-    }
-    return total_winners;
+    return (0..=time).filter(|i| i * (time - i) > distance).count() as u64;
 }
 
 #[cfg(test)]
