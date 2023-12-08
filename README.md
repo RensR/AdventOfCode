@@ -1,7 +1,22 @@
 # AdventOfCode
 
-Year 2022, 2021, 2019, 2018 are in Golang
-Year 2020 is in C#
+| Year                                                                                      | Language |
+|-------------------------------------------------------------------------------------------|----------|
+| [2023](https://github.com/RensR/AdventOfCode/tree/master/AdventOfCode/Solutions/sol-2023) | Rust     |
+| [2022](https://github.com/RensR/AdventOfCode/tree/master/AdventOfCode/Solutions/2022)     | Golang   |
+| [2021](https://github.com/RensR/AdventOfCode/tree/master/AdventOfCode/Solutions/2021)     | Golang   |
+| [2020](https://github.com/RensR/AdventOfCode/tree/master/AdventOfCode/Solutions/Year2020) | C#       |
+| [2019](https://github.com/RensR/AdventOfCode/tree/master/AdventOfCode/Solutions/2019)     | Golang   |
+| [2018](https://github.com/RensR/AdventOfCode/tree/master/AdventOfCode/Solutions/2018)     | Golang   |
+
+
+## [2023](https://github.com/RensR/AdventOfCode/tree/master/AdventOfCode/Solutions/sol-2023)
+Run `cargo aoc` to get the answers to both `part 1` and `part 2` for the latest day.
+
+Run `cargo test` to run the tests for the latest day.
+
+Run `cargo aoc input` to download the puzzle input for the latest day.
+
 
 ## [2022](https://github.com/RensR/AdventOfCode/tree/master/AdventOfCode/Solutions/2022)
 Run `main` in `main.go` in the daily folder to get the answers to both `part 1` and `part 2` for each day. Input is tested agains the tests in `puzzle.go`.
