@@ -219,7 +219,7 @@ pub fn part2((map, start): &(Vec<Vec<char>>, (usize, usize))) -> i32 {
                         }
                     }
                     if cur_y != 0 {
-                        outer.insert((cur_x , cur_y - 1));
+                        outer.insert((cur_x, cur_y - 1));
                     }
 
                     inner.insert((cur_x + 1, cur_y + 1));
@@ -257,7 +257,7 @@ pub fn part2((map, start): &(Vec<Vec<char>>, (usize, usize))) -> i32 {
                         inner.insert((cur_x - 1, cur_y - 1));
                     }
                     outer.insert((cur_x + 1, cur_y + 1));
-                    outer.insert((cur_x + 1, cur_y ));
+                    outer.insert((cur_x + 1, cur_y));
 
                     cur_y -= 1;
                     last_move = Direction::Up;
@@ -295,13 +295,14 @@ pub fn part2((map, start): &(Vec<Vec<char>>, (usize, usize))) -> i32 {
 
     // Since we set the outer result to 10000000 we can return the smaller one
     // and that should be the correct answer.
-    return if result_maybe_in < result_maybe_out { result_maybe_in } else { result_maybe_out };
+    return if result_maybe_in < result_maybe_out {
+        result_maybe_in
+    } else {
+        result_maybe_out
+    };
 }
 
-fn calc(
-    mut inner: HashSet<(usize, usize)>,
-    wall: HashSet<(usize, usize)>,
-) -> i32 {
+fn calc(mut inner: HashSet<(usize, usize)>, wall: HashSet<(usize, usize)>) -> i32 {
     let mut inner_seen: Queue<(usize, usize)> = queue![];
 
     inner.iter().enumerate().for_each(|(_i, (x, y))| {
