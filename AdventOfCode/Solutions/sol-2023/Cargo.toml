@@ -10,5 +10,6 @@ bench = false
 [dependencies]
 aoc-runner = "0.3.0"
 aoc-runner-derive = "0.3.0"
+grid = "0.12.0"
 num = "0.4.1"
 queues = "1.1.0"
