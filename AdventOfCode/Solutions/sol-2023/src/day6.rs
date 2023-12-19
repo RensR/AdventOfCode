@@ -1,19 +1,19 @@
 #[aoc_generator(day6)]
 pub fn input_generator(input: &str) -> Vec<(u64, u64)> {
-    let sections: Vec<_> = input.split("\n").collect();
-    return sections[0]
+    let (time, distance) = input.split_once("\n").unwrap();
+    return time
         .strip_prefix("Time:")
         .unwrap()
         .split_whitespace()
-        .map(|n| n.trim().parse::<u64>().unwrap())
+        .map(|n| n.parse::<u64>().unwrap())
         .zip(
-            sections[1]
+            distance
                 .strip_prefix("Distance:")
                 .unwrap()
                 .split_whitespace()
-                .map(|n| n.trim().parse::<u64>().unwrap()),
+                .map(|n| n.parse::<u64>().unwrap()),
         )
-        .collect::<Vec<_>>();
+        .collect();
 }
 
 #[aoc(day6, part1)]

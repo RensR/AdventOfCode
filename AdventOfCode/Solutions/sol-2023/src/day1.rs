@@ -1,12 +1,10 @@
 use std::collections::HashMap;
 
-#[aoc(day1, part1, Improved)]
+#[aoc(day1, part1)]
 pub fn part1(input: &str) -> u32 {
     return input
         .lines()
-        // Parse input into a vector of vectors of digits
         .map(|c| c.chars().filter_map(|a| a.to_digit(10)).collect::<Vec<_>>())
-        // Reduce each vector of digits into a single number
         .map(|vec| 10 * vec.first().unwrap() + vec.last().unwrap())
         .sum();
 }
@@ -17,16 +15,17 @@ pub fn part2(input: &str) -> u32 {
 }
 
 fn parse_string_digits(t_num: &str) -> u32 {
-    let mut number_lookup = HashMap::new();
-    number_lookup.insert("one".to_string(), 1);
-    number_lookup.insert("two".to_string(), 2);
-    number_lookup.insert("three".to_string(), 3);
-    number_lookup.insert("four".to_string(), 4);
-    number_lookup.insert("five".to_string(), 5);
-    number_lookup.insert("six".to_string(), 6);
-    number_lookup.insert("seven".to_string(), 7);
-    number_lookup.insert("eight".to_string(), 8);
-    number_lookup.insert("nine".to_string(), 9);
+    let number_lookup = HashMap::from([
+        ("one", 1),
+        ("two", 2),
+        ("three", 3),
+        ("four", 4),
+        ("five", 5),
+        ("six", 6),
+        ("seven", 7),
+        ("eight", 8),
+        ("nine", 9),
+    ]);
 
     let chars = t_num.chars().collect::<Vec<_>>();
     let mut result: Vec<u32> = Vec::new();
@@ -46,7 +45,7 @@ fn parse_string_digits(t_num: &str) -> u32 {
                 }
             }
         }
-        i = i + 1;
+        i += 1;
     }
     return 10 * result.first().unwrap() + result.last().unwrap();
 }

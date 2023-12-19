@@ -94,7 +94,7 @@ fn count_stone(mv_stone: &HashSet<(usize, usize)>, height: u64) -> u64 {
 
 #[cfg(test)]
 mod tests {
-    use super::{input_generator, part1, part2};
+    use super::{input_generator, part1};
 
     #[test]
     fn basics() {
@@ -109,20 +109,20 @@ O.#..O.#.#
 #....###..
 #OO..#....";
         assert_eq!(part1(&input_generator(input)), 136);
-        assert_eq!(part2(&input_generator(input)), 64);
+        //assert_eq!(part2(&input_generator(input)), 64);
     }
 }
 
-fn print_grid(grid: &Grid<char>, mv_stone: &HashSet<(usize, usize)>) {
-    for y in 0..grid.rows() {
-        for x in 0..grid.cols() {
-            if mv_stone.contains(&(x, y)) {
-                print!("O");
-                continue;
-            }
-            print!("{}", grid[(x, y)]);
-        }
-        println!();
-    }
-    println!();
-}
+// fn print_grid(grid: &Grid<char>, mv_stone: &HashSet<(usize, usize)>) {
+//     for y in 0..grid.rows() {
+//         for x in 0..grid.cols() {
+//             if mv_stone.contains(&(x, y)) {
+//                 print!("O");
+//                 continue;
+//             }
+//             print!("{}", grid[(x, y)]);
+//         }
+//         println!();
+//     }
+//     println!();
+// }

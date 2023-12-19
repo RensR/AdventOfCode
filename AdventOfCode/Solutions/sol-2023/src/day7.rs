@@ -49,12 +49,12 @@ fn hand_value(cards: &Vec<u64>) -> u64 {
         let count = number_lookup.entry(card).or_insert(0);
         *count += 1;
     }
-    let pairs = number_lookup
+    let mut pairs = number_lookup
         .iter()
-        .filter(|(_key, value)| **value > 1)
         .map(|(_key, value)| value)
         .collect::<Vec<_>>();
     let raw_card_value = list_to_num(cards);
+    pairs.sort_by(|a, b| b.cmp(a));
     return calc_hand_strength(&pairs) + raw_card_value;
 }
 
@@ -88,7 +88,7 @@ fn hand_value_2(cards: &Vec<u64>) -> u64 {
 
     pairs[0] += jokers;
 
-    let filtered_cards: Vec<&u64> = pairs.iter().filter(|value| **value > 1).collect::<Vec<_>>();
+    let filtered_cards: Vec<&u64> = pairs.iter().collect::<Vec<_>>();
     return calc_hand_strength(&filtered_cards) + raw_card_value;
 }
 
@@ -105,20 +105,16 @@ fn calc_hand_strength(pairs: &Vec<&u64>) -> u64 {
     let two_pair = 1e11 as u64;
     let pair = 1e10 as u64;
 
-    if pairs.len() == 1 {
-        return match *pairs[0] {
-            5 => five_kind,
-            4 => four_kind,
-            3 => three_kind,
-            2 => pair,
-            _ => panic!("Invalid number of pairs"),
-        };
-    }
-    if *pairs[0] == 3 || *pairs[1] == 3 {
-        return full_house;
-    }
-
-    return two_pair;
+    return match *pairs.as_slice() {
+        [5] => five_kind,
+        [4, 1] => four_kind,
+        [3, 2] => full_house,
+        [3, 1, 1] => three_kind,
+        [2, 2, 1] => two_pair,
+        [2, 1, 1, 1] => pair,
+        [1, 1, 1, 1, 1] => 0,
+        _ => panic!("Invalid number of pairs"),
+    };
 }
 
 fn list_to_num(cards: &Vec<u64>) -> u64 {

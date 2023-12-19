@@ -227,6 +227,7 @@ mod tests {
 #.###....
 ##.#.####
 ##.#.####";
+        assert_eq!(part1(&input_generator(input)), 1400);
         assert_eq!(part2(&input_generator(input)), 7);
     }
 }

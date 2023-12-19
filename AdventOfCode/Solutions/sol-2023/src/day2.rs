@@ -1,3 +1,5 @@
+use std::cmp::max;
+
 #[derive(Debug)]
 pub struct Game {
     id: u32,
@@ -16,7 +18,7 @@ pub fn input_generator(input: &str) -> Vec<Game> {
     input
         .lines()
         .map(|l| {
-            let mut game_info = l.trim().split(':');
+            let mut game_info = l.split(':');
             let mut game = Game {
                 id: game_info
                     .next()
@@ -92,15 +94,9 @@ pub fn part2(games: &Vec<Game>) -> u32 {
         .map(|round| {
             let (mut max_red, mut max_green, mut max_blue) = (0, 0, 0);
             for round in round.games.iter() {
-                if round.red > max_red {
-                    max_red = round.red;
-                }
-                if round.blue > max_blue {
-                    max_blue = round.blue;
-                }
-                if round.green > max_green {
-                    max_green = round.green;
-                }
+                max_red = max(max_red, round.red);
+                max_green = max(max_green, round.green);
+                max_blue = max(max_blue, round.blue);
             }
             return max_red * max_blue * max_green;
         })

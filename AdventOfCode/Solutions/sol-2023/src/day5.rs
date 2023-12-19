@@ -1,3 +1,5 @@
+use std::cmp::min;
+
 #[derive(Debug)]
 pub struct Almanac {
     seed: Vec<u32>,
@@ -95,9 +97,7 @@ fn solve((seed_start, range_length): &(u32, u32), lookup: &Vec<Vec<(u32, u32, u3
 
             return acc;
         });
-        if new_res < best_res {
-            best_res = new_res;
-        }
+        best_res = min(best_res, new_res);
         cur_seed = cur_seed + 1;
     }
 

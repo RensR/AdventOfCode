@@ -6,16 +6,7 @@ pub fn part1(input_s: &str) -> u32 {
     let height = input.len();
     let width = input[0].len();
 
-    let mut seen: Vec<Vec<bool>> = Vec::new();
-
-    for _ in 0..=height {
-        let mut row = Vec::new();
-        for _ in 0..=width {
-            row.push(false);
-        }
-        seen.push(row);
-    }
-
+    let mut seen: Vec<Vec<bool>> = vec![vec![false; width]; height];
     let mut total_num = 0;
     let directions: Vec<(i32, i32)> = get_direction();
 
